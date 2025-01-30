@@ -3,7 +3,7 @@ import boto3
 from botocore.exceptions import ClientError
 
 def get_secret():
-
+    
     secret_name = "crawford_openai_api_key"
     region_name = "us-east-1"
 
@@ -23,6 +23,17 @@ def get_secret():
     return secret
 
 def lambda_handler(event, context):
+
+    '''
+    TODO: Grab value from key-pair
+    TODO: Verify that exceptions return proper result to PuppyPi
+    TODO: Handling for accepting data from the PuppyPi
+    TODO: Sending and receiving information to OpenAI Whisper
+    TODO: Prompt engineering for GPT
+    TODO: Sending and receiving information for GPT models
+    TODO: Maybe add verification stage for GPT output?
+    TODO: Return information to the PuppyPi
+    '''
     
     api_key = get_secret()
 
