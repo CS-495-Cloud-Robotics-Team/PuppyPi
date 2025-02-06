@@ -4,6 +4,7 @@ import base64
 import openai
 import tempfile
 from botocore.exceptions import ClientError
+dog_commands = ["sit", "down", "walk"]
 
 def get_secret():
     
@@ -72,12 +73,49 @@ def lambda_handler(event, context):
         # Extract transcription text
         transcription_text = response.get("text", "")
 
+        # Send transcription to GPT-3.5-turbo for further processing
+        gpt_response = ask_openai(transcription_text)
+
+        print("gpt response " + gpt_response)
+
         return {
             "statusCode": 200,
-            "body": json.dumps({"transcription": transcription_text})
+            # "body": json.dumps({"transcription": transcription_text})
+            "body": json.dumps({
+                "transcription": transcription_text,
+                "gpt_analysis": gpt_response
+            })
         }
     except Exception as e:
         return {
             "statusCode": 500,
             "body": json.dumps({"error": str(e)})
         }
+
+    return {
+                "statusCode": 400,
+                "body": json.dumps({"End": "End of test"})
+            }
+
+def ask_openai(transcription_text):
+    """Send a prompt to OpenAI's ChatGPT and return the response."""
+    
+    # openai.api_key = "your_api_key_here"  # api key previously defined
+
+    prompt = f"""
+    You are an AI that classifies spoken commands into predefined dog commands.
+    The valid commands are: {", ".join(dog_commands)}.
+    
+    Based on the following input, return the **single best matching command** from the list.
+    
+    Input: "{transcription_text}"
+    
+    Output: (Only return one of the commands: {", ".join(dog_commands)})
+    """
+
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",  # Change to "gpt-3.5-turbo" if you want a cheaper option
+        messages=[{"role": "user", "content": prompt}]
+    )
+
+    return response["choices"][0]["message"]["content"]
