@@ -4,7 +4,28 @@ import base64
 import openai
 import tempfile
 from botocore.exceptions import ClientError
-dog_commands = ["sit", "down", "walk"]
+
+def get_commands():
+    return ["2_legs_stand", 
+            "bow", 
+            "boxing",
+            "grab",
+            "jump",
+            "kick_ball_left",
+            "kick_ball_right",
+            "lie_down",
+            "look_down",
+            "moonwalk",
+            "nod",
+            "pee",
+            "push-up",
+            "shake_hands",
+            "sit",
+            "spacewalk",
+            "stand_with_arm",
+            "stand",
+            "stretch",
+            "wave"]
 
 def get_secret():
     
@@ -19,8 +40,6 @@ def get_secret():
             SecretId=secret_name
         )
     except ClientError as e:
-        # For a list of exceptions thrown, see
-        # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
         raise e
 
     #Parse response and grab the API key
@@ -32,22 +51,20 @@ def lambda_handler(event, context):
 
     '''
     TODO: Verify that exceptions return proper result to PuppyPi
-    TODO: Handling for accepting data from the PuppyPi
-    TODO: Sending and receiving information to OpenAI Whisper
     TODO: Prompt engineering for GPT
-    TODO: Sending and receiving information for GPT models
     TODO: Maybe add verification stage for GPT output?
     TODO: Return information to the PuppyPi
     '''
     
     api_key = get_secret()
-    if api_key is None:
+    if api_key is None: # check if our api key retrieval failed
         return {
             "statusCode": 500,
             "body": json.dumps({"error": "Failed to retrieve API key"})
         }
 
     # Check if our incoming data has a body
+    # Could be improved
     if "body" not in event:
         return {
             "statusCode": 400,
@@ -55,7 +72,7 @@ def lambda_handler(event, context):
         }
 
     try:
-        # Decode the Base64-encoded MP3 file received from API Gateway
+        # Decode the Base64-encoded MP3 file received from API Gateway, may need to be verified
         file_content = base64.b64decode(event["body"])
 
         # Save file temporarily for Whisper API since it requires a file format and not binary
@@ -74,13 +91,10 @@ def lambda_handler(event, context):
         transcription_text = response.get("text", "")
 
         # Send transcription to GPT-3.5-turbo for further processing
-        gpt_response = ask_openai(transcription_text)
-
-        print("gpt response " + gpt_response)
+        gpt_response = interpret_audio(transcription_text)
 
         return {
             "statusCode": 200,
-            # "body": json.dumps({"transcription": transcription_text})
             "body": json.dumps({
                 "transcription": transcription_text,
                 "gpt_analysis": gpt_response
@@ -94,28 +108,29 @@ def lambda_handler(event, context):
 
     return {
                 "statusCode": 400,
-                "body": json.dumps({"End": "End of test"})
+                "body": json.dumps({"Error": "Reached end of API"})
             }
 
-def ask_openai(transcription_text):
-    """Send a prompt to OpenAI's ChatGPT and return the response."""
+def interpret_audio(transcription_text):
     
-    # openai.api_key = "your_api_key_here"  # api key previously defined
+    """Send a prompt to OpenAI's GPT-3.5-TURBO and return the response."""
+    system_prompt = f"""
+    You are an AI that classifies spoken commands into predefined commands for a robotic quadruped.
+    The valid commands are: {", ".join(get_commands())}.
 
-    prompt = f"""
-    You are an AI that classifies spoken commands into predefined dog commands.
-    The valid commands are: {", ".join(dog_commands)}.
-    
-    Based on the following input, return the **single best matching command** from the list.
-    
-    Input: "{transcription_text}"
-    
-    Output: (Only return one of the commands: {", ".join(dog_commands)})
+    Your task is to analyze the given user input and return the **single best matching command** from the predefined list.
+
+    - Only return one of the commands: {", ".join(get_commands())}.
+    - Do not add any extra words, explanations, or formatting.
+
     """
 
     response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",  # Change to "gpt-3.5-turbo" if you want a cheaper option
-        messages=[{"role": "user", "content": prompt}]
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": transcription_text}
+        ]
     )
 
     return response["choices"][0]["message"]["content"]
