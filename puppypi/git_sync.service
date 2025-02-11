@@ -1,0 +1,13 @@
+[Unit]
+Description=Sync Git Repository on Boot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/home/pi/puppypi/git_sync.sh
+TimeoutStartSec=30
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
