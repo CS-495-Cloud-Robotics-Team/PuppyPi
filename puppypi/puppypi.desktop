@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Arm
+Comment=Arm Program
+Encoding=UTF-8
+Exec=bash -c "xhost + && docker exec -u ubuntu -w /home/ubuntu 82df027dddb8 /bin/zsh -c 'bash ~/software/puppypi_control/puppypi.sh'"
+Terminal=false
+MultipleArgs=false
+Type=Application
+Categories=Application;Development;
+StartupNotify=true
+Icon=/home/pi/armpi_fpv/arm.ico

@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# 当期版本
+export VERSION="|V1.0.0|ROS2_1.0|2024-10-15|"
+
+
+# 主从机设置：robot_xxx
+export HOST=/ #robot_1
+export MASTER=/ #robot_1
+
+
+export need_compile=False
+export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+export ROS_DOMAIN_ID=0
+
+echo -e "\033[32m----------------------------------------------
+当前环境是ROS2|The current environment is ROS2
+----------------------------------------------\033[0m"
+echo -e "HOST:    \033[32m$HOST\033[0m"
+echo -e "MASTER:  \033[32m$MASTER\033[0m"
+echo -e "ROS_DOMAIN_ID: \033[32m$ROS_DOMAIN_ID\033[0m"
+echo -e "VERSION: \033[32m$VERSION\033[0m"
