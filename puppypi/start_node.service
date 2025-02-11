@@ -1,7 +1,7 @@
 [Unit]
 Description=My Docker App
-Requires=docker.service
-After=docker.service
+Requires=docker.service git_sync.service
+After=docker.service git_sync.service
 
 [Service]
 Type=simple
