@@ -72,11 +72,11 @@ def lambda_handler(event, context):
         }
 
     try:
-        # Decode the Base64-encoded MP3 file received from API Gateway, may need to be verified
+        # Decode the Base64-encoded WAV file received from API Gateway, may need to be verified
         file_content = base64.b64decode(event["body"])
 
         # Save file temporarily for Whisper API since it requires a file format and not binary
-        with tempfile.NamedTemporaryFile(delete=True, suffix=".mp3") as temp_audio:
+        with tempfile.NamedTemporaryFile(delete=True, suffix=".wav") as temp_audio:
             temp_audio.write(file_content)
             temp_audio.flush()  # Ensure data is written before passing it to Whisper
             
@@ -113,7 +113,7 @@ def lambda_handler(event, context):
 
 def interpret_audio(transcription_text):
     
-    """Send a prompt to OpenAI's GPT-3.5-TURBO and return the response."""
+    #Send a prompt to OpenAI's GPT-3.5-TURBO and return the response.
     system_prompt = f"""
     You are an AI that classifies spoken commands into predefined commands for a robotic quadruped.
     The valid commands are: {", ".join(get_commands())}.
