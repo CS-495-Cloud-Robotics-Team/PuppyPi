@@ -4,6 +4,8 @@ import numpy as np
 import wave
 import os
 from dotenv import load_dotenv
+import tempfile
+import requests
 
 load_dotenv()
 
@@ -14,13 +16,13 @@ if not PICO_ACCESS_KEY:
     raise ValueError("Make sure you have an .env file with PICO_ACCESS_KEY for picovoice.")
 
 #Replace file with custom, to activate this one say "PicoVoice"
-porcupine = pvporcupine.create(access_key=PICO_ACCESS_KEY, keyword_paths=["picovoice_windows.ppn"]) 
+porcupine = pvporcupine.create(access_key=PICO_ACCESS_KEY, keyword_paths=["PuppyPi123.ppn"]) 
 
 pa = pyaudio.PyAudio()
 stream = pa.open(format=pyaudio.paInt16, channels=1, rate=porcupine.sample_rate, 
                  input=True, frames_per_buffer=porcupine.frame_length)
 
-def record(Audio = pa, Format = pyaudio.paInt16, Channels = 1, Rate = 44100, Chunk = 1024, Duration = 5, Output_Filename = "recorded_audio.wav"):
+def record(Output_Filename, Audio = pa, Format = pyaudio.paInt16, Channels = 1, Rate = 44100, Chunk = 1024, Duration = 5):
     #important inputs are Duration which is the time it records in seconds and Output Filename for how to store it
     #OpenAI wisper accepts .wav files
     
@@ -46,6 +48,8 @@ def record(Audio = pa, Format = pyaudio.paInt16, Channels = 1, Rate = 44100, Chu
         wf.setsampwidth(Audio.get_sample_size(Format))
         wf.setframerate(Rate)
         wf.writeframes(b''.join(frames))
+        
+    
 
     print(f"Saved recording as {Output_Filename}")
 
@@ -66,14 +70,34 @@ try:
         if result >= 0:
             print("🔥 Wake word detected!")
             # Function to listen and save the next "Duration" seconds of audio
-            record()
+            record(Output_Filename = "recorded_audio.wav", Duration = 3)
+            # Add a function to send audio to cloud and call the program?
+            headers = {
+                'Content-Type': 'audio/wav',
+                'x-api-key': os.getenv("AWS_API_KEY"),
+            }
+            
+            with open('recorded_audio.wav', 'rb') as f:
+                data = f.read()
+
+            response = requests.post(
+                'https://1fl0qfare6.execute-api.us-east-1.amazonaws.com/default/puppyPiProcessingFunction',
+                headers=headers,
+                data=data,
+            )
+            
+            print(response.content)
+            
+            os.remove("recorded_audio.wav")
+                
+                
             # Break for testing purposes, in real program this can be deleted to rerun
             break
-            # Add a function to send audio to cloud and call the program?
+            
+            
 
 except KeyboardInterrupt:
     print("Stopping...")
     stream.close()
     pa.terminate()
     porcupine.delete()
-
