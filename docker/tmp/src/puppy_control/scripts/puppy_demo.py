@@ -5,13 +5,12 @@ import sys
 import math
 import rospy
 from std_srvs.srv import SetBool
-from puppy_control.srv import SetRunActionName
 from puppy_control.msg import Velocity, Pose, Gait
 
 
 ROS_NODE_NAME = 'puppy_demo'
 
-PuppyMove = {'x':1, 'y':0, 'yaw_rate':0}
+PuppyMove = {'x':6, 'y':0, 'yaw_rate':0}
 # x:直行控制，  前进方向为正方向，单位cm/s(straightforward control, with the forward direction as the positive direction, measured in cm/s)
 # y:侧移控制，左侧方向为正方向，单位cm/s，目前无此功能(lateral movement control, with the left direction as the positive direction, measured in cm/s. currently, this feature is bot available)
 # yaw_rate：转弯控制，逆时针方向为正方向，单位rad/s(turning control, with counterclockwise direction as the positive direction, measured in rad/s)
@@ -26,16 +25,14 @@ PuppyPose = {'roll':math.radians(0), 'pitch':math.radians(0), 'yaw':0.000, 'heig
 
 
 gait = 'Trot'
-
-#runActionGroup_srv('sit.d6ac',True)
 # overlap_time:4脚全部着地的时间，单位秒(the time when all four legs touch the ground, measured in seconds)
 # swing_time：单脚离地时间，单位秒(the time duration when a single leg is off the ground, measured in second)
 # clearance_time：前后交叉脚相位间隔时间，单位秒(the time interval between the phases when the front and rear legs cross each other, measured in seconds)
 # z_clearance：走路时，脚尖要抬高的距离，单位cm(the distance the paw needs to be raised during walking, measured in centimeters)
 
 if gait == 'Trot':
-    GaitConfig = {'overlap_time':0.2, 'swing_time':0.1, 'clearance_time':0.0, 'z_clearance':6}
-    PuppyPose['x_shift'] = 2
+    GaitConfig = {'overlap_time':0.2, 'swing_time':0.3, 'clearance_time':0.0, 'z_clearance':5}
+    PuppyPose['x_shift'] = -0.6
     # Trot步态 clearance_time = 0(Trot gait clearance_time = 0)
 
 elif gait == 'Amble':
@@ -44,18 +41,13 @@ elif gait == 'Amble':
     # Amble步态 0 ＜ clearance_time ＜ swing_time( Amble gait 0 ＜ clearance_time ＜ swing_time)
     
 elif gait == 'Walk':
-    GaitConfig = {'overlap_time':0.2, 'swing_time':0.3, 'clearance_time':0.4, 'z_clearance':4}
+    GaitConfig = {'overlap_time':0.1, 'swing_time':0.2, 'clearance_time':0.3, 'z_clearance':5}
     PuppyPose['x_shift'] = -0.65
     # Walk步态   swing_time ≤ clearance_time(Walk gait   swing_time ≤ clearance_time)
 
 def cleanup():
-    runActionGroup_srv('sit.d6ac',True)
-    runActionGroup_srv = rospy.ServiceProxy('/puppy_control/runActionGroup',SetRunActionName)
     PuppyVelocityPub.publish(x=0, y=0, yaw_rate=0)
     print('is_shutdown')
-    
-#def stop():
-    #runActionGroup_srv('sit.d6ac',True)
 
 if __name__ == '__main__':
 
@@ -65,25 +57,25 @@ if __name__ == '__main__':
     PuppyPosePub = rospy.Publisher('/puppy_control/pose', Pose, queue_size=1)
     PuppyGaitConfigPub = rospy.Publisher('/puppy_control/gait', Gait, queue_size=1)
     PuppyVelocityPub = rospy.Publisher('/puppy_control/velocity', Velocity, queue_size=1)
-    runActionGroup_srv = rospy.ServiceProxy('/puppy_control/runActionGroup',SetRunActionName)
-    print("111")
+
     set_mark_time_srv = rospy.ServiceProxy('/puppy_control/set_mark_time', SetBool)
     # 原地踏步服务(stepping in place service)
-    print("000")
+
     rospy.sleep(0.2)
-    print("222")
-    #rospy.sleep(0.2)
+    PuppyPosePub.publish(stance_x=PuppyPose['stance_x'], stance_y=PuppyPose['stance_y'], x_shift=PuppyPose['x_shift']
+            ,height=PuppyPose['height'], roll=PuppyPose['roll'], pitch=PuppyPose['pitch'], yaw=PuppyPose['yaw'], run_time = 500)
+    
+    rospy.sleep(0.2)
     PuppyGaitConfigPub.publish(overlap_time = GaitConfig['overlap_time'], swing_time = GaitConfig['swing_time']
                     , clearance_time = GaitConfig['clearance_time'], z_clearance = GaitConfig['z_clearance'])
     rospy.sleep(0.2)
-    PuppyPosePub.publish(stance_x=PuppyPose['stance_x'], stance_y=PuppyPose['stance_y'], x_shift=PuppyPose['x_shift'],height=PuppyPose['height'], roll=PuppyPose['roll'], pitch=PuppyPose['pitch'], yaw=PuppyPose['yaw'], run_time = 500)
-    rospy.sleep(0.8)
+
     PuppyVelocityPub.publish(x=PuppyMove['x'], y=PuppyMove['y'], yaw_rate=PuppyMove['yaw_rate'])
 
     set_mark_time_srv(False)
     ## 如果原地踏步期间，小狗仍然在缓慢的向前或向后，那就需要重新调整小狗重心，微调PuppyPose['x_shift']即可(if the dog continues to move slowly forward on backward while stepping in place, it is necessary to readjust the dog's center of gravity. simply fine-tune 'x_shift' in PuppyPose)
 
-    print("444")
+
     while True:
         try:
             rospy.sleep(0.05)
