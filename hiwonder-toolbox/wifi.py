@@ -219,5 +219,4 @@ if __name__ == "__main__":
         except BaseException as e:
             print('error', e)
         if ret == -1:
-            sys.exit(0)
-        WIFI_MODE = 1  
+            sys.exit(0) 
