@@ -220,3 +220,4 @@ if __name__ == "__main__":
             print('error', e)
         if ret == -1:
             sys.exit(0) 
+        WIFI_MODE = 1
