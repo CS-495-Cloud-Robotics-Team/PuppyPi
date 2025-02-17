@@ -1,0 +1,51 @@
+#!/usr/bin/env python3
+# coding=utf8
+
+#Author: Eli
+#Date: 02/16/25
+
+import os
+import sys
+import math
+import rospy
+from std_srvs.srv import SetBool
+from puppy_control.msg import Velocity, Pose, Gait
+
+#Must source this for action groups
+from puppy_control.srv import SetRunActionName
+
+ROS_NODE_NAME = 'puppy_demo'
+
+
+#sleep() commands are often included to allow the robot to complete the action before moving on to the next command
+
+if __name__ == "__main__":
+    # Initialize node
+    rospy.init_node('puppy_demo')
+
+
+    # Initialize action group service
+    runActionGroup_srv = rospy.ServiceProxy('/puppy_control/runActionGroup', SetRunActionName)
+
+    rospy.sleep(3)
+
+
+    runActionGroup_srv('sit.d6ac',True)
+    rospy.sleep(2)
+    runActionGroup_srv('stand.d6ac',True)
+    rospy.sleep(2)
+    runActionGroup_srv('moonwalk.d6ac',True)
+    rospy.sleep(3)
+
+    print("Stopping")
+    runActionGroup_srv('stand.d6ac',True)
+
+    while True:
+        try:
+            rospy.sleep(0.05)
+            if rospy.is_shutdown():
+                sys.exit(0)
+        except :
+            sys.exit(0)
+
+
