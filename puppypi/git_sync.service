@@ -6,6 +6,7 @@ Wants=network-online.target
 [Service]
 Type=oneshot
 User=pi
+ExecStartPre=/bin/sh -c 'until ping -c1 8.8.8.8 >/dev/null 2>&1; do sleep 5; done'
 ExecStart=/home/pi/puppypi/git_sync.sh
 TimeoutStartSec=30
 RemainAfterExit=yes
