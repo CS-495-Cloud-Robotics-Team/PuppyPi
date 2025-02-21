@@ -5,6 +5,7 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
+User=pi
 ExecStart=/home/pi/puppypi/git_sync.sh
 TimeoutStartSec=30
 RemainAfterExit=yes
