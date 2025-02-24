@@ -135,6 +135,7 @@ def interpret_audio(transcription_text):
 
     - Only return one of the commands: {", ".join(get_commands())}.
     - Do not add any extra words, explanations, or formatting.
+    - Any unusual / undefined / error behavior that cannot possibly be extrapolated to a command should return command "error" in the same format as other commands.
 
     """
 
