@@ -8,6 +8,7 @@ import wave
 import os
 from dotenv import load_dotenv
 import requests
+from action_groups_dict import action_groups_dict
 
 # Localhost, connection to port 9090 on itself
 PUPPYPI_IP = "localhost"
@@ -140,9 +141,23 @@ if __name__ == "__main__":
                 data = response.json()
 
                 responseString = gpt_analysis = data.get("gpt_analysis")
-                print(responseString)
-                
-                
+                action_group_file = action_groups_dict.get(responseString)
+                    
+                if action_group_file:
+                    def on_open(ws):
+                        payload = {
+                            "op": "call_service",
+                            "service": "/puppy_control/runActionGroup",
+                            "args": {
+                                "name": action_group_file, 
+                                "wait": True
+                            }
+                        }
+                        ws.send(json.dumps(payload))
+
+                    call_puppy_service()
+                else:
+                    print("❌ No valid action group file found for response:", responseString)
                 
                 # Break for testing purposes, in real program this can be deleted to rerun
                 # break
