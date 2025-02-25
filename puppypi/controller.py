@@ -21,6 +21,13 @@ load_dotenv("/home/pi/.env")
 #PicoVoice Access Key
 PICO_ACCESS_KEY = os.getenv("PICO_ACCESS_KEY")
 
+#Replace file with custom, to activate this one say "PicoVoice"
+porcupine = pvporcupine.create(access_key=PICO_ACCESS_KEY, keyword_paths=["RBWakeWordTrained.ppn"]) 
+
+pa = pyaudio.PyAudio()
+stream = pa.open(format=pyaudio.paInt16, channels=1, rate=porcupine.sample_rate, 
+                input=True, frames_per_buffer=porcupine.frame_length)
+
 def on_message(ws, message):
     print("Received message: ", message)
 
@@ -96,12 +103,6 @@ if __name__ == "__main__":
     if not PICO_ACCESS_KEY:
         print(PICO_ACCESS_KEY)
         raise ValueError("Make sure you have an .env file with PICO_ACCESS_KEY for picovoice.")
-    #Replace file with custom, to activate this one say "PicoVoice"
-    porcupine = pvporcupine.create(access_key=PICO_ACCESS_KEY, keyword_paths=["RBWakeWordTrained.ppn"]) 
-
-    pa = pyaudio.PyAudio()
-    stream = pa.open(format=pyaudio.paInt16, channels=1, rate=porcupine.sample_rate, 
-                    input=True, frames_per_buffer=porcupine.frame_length)
 
     print("🎙 Listening...")
 
