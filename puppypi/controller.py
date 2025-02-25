@@ -52,8 +52,20 @@ def on_open(ws):
     # Send the payload as JSON
     ws.send(json.dumps(payload))
 
-def call_puppy_service():
-    # Create the WebSocket connection
+def call_puppy_service(action_group_file):
+    def on_open(ws):
+        payload = {
+            "op": "call_service",
+            "service": "/puppy_control/runActionGroup",
+            "args": {
+                "name": action_group_file,  
+                "wait": True  
+            }
+        }
+        ws.send(json.dumps(payload))
+        print(f"📡 Sent action group command: {action_group_file}")
+        ws.close()  # Close WebSocket after sending command
+
     ws = websocket.WebSocketApp(
         WEBSOCKET_URL,
         on_message=on_message,
@@ -61,13 +73,9 @@ def call_puppy_service():
         on_close=on_close,
         on_open=on_open
     )
-    
-    # Start the WebSocket in a separate thread
-    ws_thread = threading.Thread(target=ws.run_forever)
-    ws_thread.start()
 
-   
-    ws_thread.join()
+    ws.run_forever()
+
 
 def record(Output_Filename, Audio = pa, Format = pyaudio.paInt16, Channels = 1, Rate = 44100, Chunk = 1024, Duration = 5):
     #important inputs are Duration which is the time it records in seconds and Output Filename for how to store it
@@ -105,10 +113,9 @@ if __name__ == "__main__":
         print(PICO_ACCESS_KEY)
         raise ValueError("Make sure you have an .env file with PICO_ACCESS_KEY for picovoice.")
 
-    print("🎙 Listening...")
-
     try:
         while True:
+            print("🎙 Listening...")
             pcm = stream.read(porcupine.frame_length, exception_on_overflow=False)
             pcm = np.frombuffer(pcm, dtype=np.int16)
 
@@ -144,18 +151,7 @@ if __name__ == "__main__":
                 action_group_file = action_groups_dict.get(responseString)
                     
                 if action_group_file:
-                    def on_open(ws):
-                        payload = {
-                            "op": "call_service",
-                            "service": "/puppy_control/runActionGroup",
-                            "args": {
-                                "name": action_group_file, 
-                                "wait": True
-                            }
-                        }
-                        ws.send(json.dumps(payload))
-
-                    call_puppy_service()
+                    call_puppy_service(action_group_file)
                 else:
                     print("❌ No valid action group file found for response:", responseString)
                 
