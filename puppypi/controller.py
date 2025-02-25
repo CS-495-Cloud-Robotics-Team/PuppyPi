@@ -1,12 +1,28 @@
 import json
 import websocket
 import threading
+import pvporcupine
+import pyaudio
+import numpy as np
+import wave
+import os
+from dotenv import load_dotenv
+import requests
 
-# Replace with your PuppyPi IP
-PUPPYPI_IP = "192.168.0.37"
+# Localhost, connection to port 9090 on itself
+PUPPYPI_IP = "localhost"
 
 # WebSocket URL (rosbridge default is ws://<PuppyPi-IP>:9090)
 WEBSOCKET_URL = f"ws://{PUPPYPI_IP}:9090"
+
+#Loads the .env file
+load_dotenv("/home/pi/.env")
+
+#PicoVoice Access Key
+PICO_ACCESS_KEY = os.getenv("PICO_ACCESS_KEY")
+if not PICO_ACCESS_KEY:
+    print(PICO_ACCESS_KEY)
+    raise ValueError("Make sure you have an .env file with PICO_ACCESS_KEY for picovoice.")
 
 def on_message(ws, message):
     print("Received message: ", message)

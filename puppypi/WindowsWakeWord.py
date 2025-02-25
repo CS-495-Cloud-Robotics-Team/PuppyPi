@@ -8,7 +8,7 @@ import requests
 import json
 
 #Loads the .env file
-load_dotenv()
+load_dotenv("/home/pi/.env")
 
 #PicoVoice Access Key
 PICO_ACCESS_KEY = os.getenv("PICO_ACCESS_KEY")
