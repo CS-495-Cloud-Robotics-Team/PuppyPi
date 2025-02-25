@@ -1,0 +1,37 @@
+#Action Group Dictionary
+#Author: Eli Weber
+
+action_groups_dict = {
+    "two-legs-stand": "2_legs_stand.d6ac",
+    "bow": "bow.d6ac",
+    "boxing-main": "boxing.d6ac",
+    "boxing-alt": "boxing2.d6ac",
+    "grab": "grab.d6a",
+    "jump": "jump.d6ac",
+    "kick-ball-left": "kick_ball_left.d6ac",
+    "kick-ball-left-bak": "kick_ball_left_bak.d6ac",
+    "kick-ball-right": "kick_ball_right.d6ac",
+    "lie-down": "lie_down.d6ac",
+    "look-down-short": "look_down.d6a",
+    "look-down": "look_down.d6ac",
+    "moonwalk": "moonwalk.d6ac",
+    "nod": "nod.d6ac",
+    "pee": "pee.d6ac",
+    "place-main": "place.d6a",
+    "place-alt": "place1.d6a",
+    "push-up": "push-up.d6ac",
+    "shake-hands": "shake_hands.d6ac",
+    "shake-head": "shake_head.d6ac",
+    "sit": "sit.d6ac",
+    "spacewalk": "spacewalk.d6ac",
+    "stand-short": "stand.d6a",
+    "stand": "stand.d6ac",
+    "stand-with-arm": "stand_with_arm.d6a",
+    "stretch": "stretch.d6ac",
+    "temp": "temp.d6ac",
+    "up-stairs-2cm": "up_stairs_2cm.d6ac",
+    "up-stairs-3.5cm": "up_stairs_3.5cm.d6ac",
+    "up-stairs-3.5cm-alt0": "up_stairs_3.5cm0.d6ac",
+    "up-stairs-3.5cm-alt1": "up_stairs_3.5cm1.d6ac",
+    "wave": "wave.d6ac"
+}

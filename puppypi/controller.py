@@ -121,14 +121,14 @@ if __name__ == "__main__":
             if result >= 0:
                 print("🔥 Wake word detected!")
                 # Function to listen and save the next "Duration" seconds of audio
-                record(Output_Filename = "recorded_audio.wav", Duration = 3)
+                record(Output_Filename = "temp.wav", Duration = 3)
                 # Add a function to send audio to cloud and call the program?
                 headers = {
                     'Content-Type': 'audio/wav',
                     'x-api-key': os.getenv("COMMAND_API_KEY"),
                 }
                 
-                with open('recorded_audio.wav', 'rb') as f:
+                with open('temp.wav', 'rb') as f:
                     data = f.read()
 
                 response = requests.post(
@@ -137,12 +137,16 @@ if __name__ == "__main__":
                     data=data,
                 )
                 
-                print(response.content)
+                data = response.json()
+
+                responseString = gpt_analysis = data.get("gpt_analysis")
+                print(responseString)
                 
-                os.remove("recorded_audio.wav")
+                
                 
                 # Break for testing purposes, in real program this can be deleted to rerun
-                break
+                # break
+                os.remove("temp.wav")
                 
                 
 
