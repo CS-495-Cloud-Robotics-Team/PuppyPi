@@ -128,14 +128,25 @@ def interpret_audio(transcription_text):
     
     #Send a prompt to OpenAI's GPT-3.5-TURBO and return the response.
     system_prompt = f"""
-    You are an AI that classifies spoken commands into predefined commands for a robotic quadruped.
+    You are an AI that translates spoken commands into a chronological sequence of predefined commands for a robotic quadruped.
     The valid commands are: {", ".join(get_commands())}.
 
-    Your task is to analyze the given user input and return the **single best matching command** from the predefined list.
+    Your task is to analyze the given user input and return the **sequence of matching commands** in order.
+    - Return a **JSON list** of commands in the exact order they should be executed.
+    - Only include commands from this list: {", ".join(get_commands())}.
+    - If a command cannot be determined, exclude it.
+    - If the user input is completely unrelated, return `["error"]`.
 
-    - Only return one of the commands: {", ".join(get_commands())}.
-    - Do not add any extra words, explanations, or formatting.
-    - Any unusual / undefined / error behavior that cannot possibly be extrapolated to a command should return command "error" in the same format as other commands.
+    Example Inputs & Outputs:
+    
+    - Input: "Sit and then stand up"
+      Output: `["sit", "stand"]`
+      
+    - Input: "Bow, shake hands, and wave"
+      Output: `["bow", "shake-hands", "wave"]`
+
+    - Input: "Do a backflip" (not a valid command)
+      Output: `["error"]`
 
     """
 
@@ -147,4 +158,6 @@ def interpret_audio(transcription_text):
         ]
     )
 
-    return response["choices"][0]["message"]["content"]
+    # Extract and return the list of commands
+    command_list = json.loads(response["choices"][0]["message"]["content"])
+    return command_list
