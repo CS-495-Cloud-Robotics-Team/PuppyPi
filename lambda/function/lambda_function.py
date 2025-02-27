@@ -136,6 +136,7 @@ def interpret_audio(transcription_text):
     - Only include commands from this list: {", ".join(get_commands())}.
     - If a command cannot be determined, exclude it.
     - If the user input is completely unrelated, return `["error"]`.
+    - Under no circumstances should you deviate from the response format.
 
     Example Inputs & Outputs:
     
