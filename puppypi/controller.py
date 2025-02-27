@@ -6,6 +6,7 @@ import pyaudio
 import numpy as np
 import wave
 import os
+import queue
 from dotenv import load_dotenv
 import requests
 from action_groups_dict import action_groups_dict
@@ -29,6 +30,9 @@ pa = pyaudio.PyAudio()
 stream = pa.open(format=pyaudio.paInt16, channels=1, rate=porcupine.sample_rate, 
                 input=True, frames_per_buffer=porcupine.frame_length)
 
+# Queue for WebSocket commands
+command_queue = queue.Queue()
+
 def on_message(ws, message):
     print("Received message: ", message)
 
@@ -36,24 +40,27 @@ def on_error(ws, error):
     print("Error: ", error)
 
 def on_close(ws, close_status_code, close_msg):
-    print("Closed")
+    print("WebSocket Closed")
 
-def on_open(ws):
-    # Create the request to call the service
-    payload = {
-        "op": "call_service",
-        "service": "/puppy_control/runActionGroup",
-        "args": {
-            "name": "pee.d6ac",   # Action name: "sit"
-            "wait": True      # Wait for completion: True
-        }
-    }
-    
-    # Send the payload as JSON
-    ws.send(json.dumps(payload))
-
-def call_puppy_service(action_group_file):
+def websocket_handler():
+    """Maintains a persistent WebSocket connection and processes commands from the queue."""
     def on_open(ws):
+        print("WebSocket connected ✅")
+
+    ws = websocket.WebSocketApp(
+        WEBSOCKET_URL,
+        on_message=on_message,
+        on_error=on_error,
+        on_close=on_close,
+        on_open=on_open
+    )
+
+    # Run WebSocket in a separate thread
+    wst = threading.Thread(target=ws.run_forever, daemon=True)
+    wst.start()
+
+    while True:
+        action_group_file = command_queue.get()  # Wait for a command
         payload = {
             "op": "call_service",
             "service": "/puppy_control/runActionGroup",
@@ -64,54 +71,32 @@ def call_puppy_service(action_group_file):
         }
         ws.send(json.dumps(payload))
         print(f"📡 Sent action group command: {action_group_file}")
-        ws.close()  # Close WebSocket after sending command
 
-    ws = websocket.WebSocketApp(
-        WEBSOCKET_URL,
-        on_message=on_message,
-        on_error=on_error,
-        on_close=on_close,
-        on_open=on_open
-    )
+def record(Output_Filename, Duration=5):
+    stream = pa.open(format=pyaudio.paInt16, channels=1, rate=44100, input=True, frames_per_buffer=1024)
+    print("🎤 Recording...")
 
-    ws.run_forever()
-
-
-def record(Output_Filename, Audio = pa, Format = pyaudio.paInt16, Channels = 1, Rate = 44100, Chunk = 1024, Duration = 5):
-    #important inputs are Duration which is the time it records in seconds and Output Filename for how to store it
-    #OpenAI wisper accepts .wav files
-    
-    # Open stream for recording
-    stream = Audio.open(format=Format, channels=Channels, rate=Rate, input=True, frames_per_buffer=Chunk)
-    
-    print("Recording...")
-
-    #This is where the audio is stored
     frames = []
-    
-    #Record audio in chunks
-    for _ in range(int(Rate / Chunk * Duration)):
-        data = stream.read(Chunk)
+    for _ in range(int(44100 / 1024 * Duration)):
+        data = stream.read(1024)
         frames.append(data)
-        
-    
-    print("Recording finished.")
-    
-    #Save the recorded data as a WAV file
-    with wave.open(Output_Filename, 'wb') as wf:
-        wf.setnchannels(Channels)
-        wf.setsampwidth(Audio.get_sample_size(Format))
-        wf.setframerate(Rate)
-        wf.writeframes(b''.join(frames))
-        
-    
 
-    print(f"Saved recording as {Output_Filename}")
+    print("🎤 Recording finished.")
+    
+    with wave.open(Output_Filename, 'wb') as wf:
+        wf.setnchannels(1)
+        wf.setsampwidth(pa.get_sample_size(pyaudio.paInt16))
+        wf.setframerate(44100)
+        wf.writeframes(b''.join(frames))
+
+    print(f"💾 Saved recording as {Output_Filename}")
 
 if __name__ == "__main__":
     if not PICO_ACCESS_KEY:
-        print(PICO_ACCESS_KEY)
         raise ValueError("Make sure you have an .env file with PICO_ACCESS_KEY for picovoice.")
+
+    # Start WebSocket handler in a separate thread
+    threading.Thread(target=websocket_handler, daemon=True).start()
 
     try:
         while True:
@@ -119,23 +104,15 @@ if __name__ == "__main__":
             pcm = stream.read(porcupine.frame_length, exception_on_overflow=False)
             pcm = np.frombuffer(pcm, dtype=np.int16)
 
-            # Volume test for mic check
-            # volume = np.abs(pcm).mean()
-            # print(f"🔊 Volume Level: {volume:.2f}")
-            
-            #reads in activation word and analizes audio
             result = porcupine.process(pcm.tolist())
-            # if word is detected result will be >=0
             if result >= 0:
                 print("🔥 Wake word detected!")
-                # Function to listen and save the next "Duration" seconds of audio
-                record(Output_Filename = "temp.wav", Duration = 3)
-                # Add a function to send audio to cloud and call the program?
+                record(Output_Filename="temp.wav", Duration=3)
+
                 headers = {
                     'Content-Type': 'audio/wav',
                     'x-api-key': os.getenv("COMMAND_API_KEY"),
                 }
-                
                 with open('temp.wav', 'rb') as f:
                     data = f.read()
 
@@ -144,28 +121,20 @@ if __name__ == "__main__":
                     headers=headers,
                     data=data,
                 )
-                
-                data = response.json()
 
-                responseString = gpt_analysis = data.get("gpt_analysis")
+                data = response.json()
+                responseString = data.get("gpt_analysis")
                 action_group_file = action_groups_dict.get(responseString)
-                    
+                
                 if action_group_file:
-                    call_puppy_service(action_group_file)
+                    command_queue.put(action_group_file)  # Add command to queue
                 else:
                     print("❌ No valid action group file found for response:", responseString)
                 
-                # Break for testing purposes, in real program this can be deleted to rerun
-                # break
                 os.remove("temp.wav")
-                
-                
 
     except KeyboardInterrupt:
         print("Stopping...")
         stream.close()
         pa.terminate()
         porcupine.delete()
-
-
-    #call_puppy_service()
