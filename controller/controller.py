@@ -13,7 +13,6 @@ from action_groups_dict import action_groups_dict
 
 # Localhost, connection to port 9090 on itself
 PUPPYPI_IP = "localhost"
-
 # WebSocket URL (rosbridge default is ws://<PuppyPi-IP>:9090)
 WEBSOCKET_URL = f"ws://{PUPPYPI_IP}:9090"
 
