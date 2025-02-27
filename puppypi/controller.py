@@ -13,7 +13,6 @@ from action_groups_dict import action_groups_dict
 
 # Localhost, connection to port 9090 on itself
 PUPPYPI_IP = "localhost"
-
 # WebSocket URL (rosbridge default is ws://<PuppyPi-IP>:9090)
 WEBSOCKET_URL = f"ws://{PUPPYPI_IP}:9090"
 
@@ -35,6 +34,7 @@ command_queue = queue.Queue()
 
 def on_message(ws, message):
     print("Received message: ", message)
+    command_queue.task_done()
 
 def on_error(ws, error):
     print("Error: ", error)
@@ -71,8 +71,9 @@ def websocket_handler():
         }
         ws.send(json.dumps(payload))
         print(f"📡 Sent action group command: {action_group_file}")
+                
 
-def record(Output_Filename, Duration=5):
+def record(Output_Filename, Duration=20):
     stream = pa.open(format=pyaudio.paInt16, channels=1, rate=44100, input=True, frames_per_buffer=1024)
     print("🎤 Recording...")
 
@@ -97,17 +98,16 @@ if __name__ == "__main__":
 
     # Start WebSocket handler in a separate thread
     threading.Thread(target=websocket_handler, daemon=True).start()
-
+    print("🎙 Listening...")
     try:
         while True:
-            print("🎙 Listening...")
             pcm = stream.read(porcupine.frame_length, exception_on_overflow=False)
             pcm = np.frombuffer(pcm, dtype=np.int16)
 
             result = porcupine.process(pcm.tolist())
             if result >= 0:
                 print("🔥 Wake word detected!")
-                record(Output_Filename="temp.wav", Duration=3)
+                record(Output_Filename="temp.wav", Duration=5)
 
                 headers = {
                     'Content-Type': 'audio/wav',
@@ -121,23 +121,20 @@ if __name__ == "__main__":
                     headers=headers,
                     data=data,
                 )
-
+                
                 data = response.json()
+                print(data)
                 responseString = data.get("gpt_analysis")
-                for oneResponse in responseString:
-                    action_group_file = action_groups_dict.get(oneResponse)
-                    if action_group_file:
-                        print(f"Putting into queue: {action_group_file}")
-                        command_queue.put(action_group_file)  # Add command to queue
-                    else:
-                        print("❌ No valid action group file found for response:", oneResponse)
-                   
-                   
-                # if action_group_file:
-                #     command_queue.put(action_group_file)  # Add command to queue
-                # else:
-                #     print("❌ No valid action group file found for response:", responseString)
-
+                if responseString:
+                    for oneResponse in responseString:
+                        command_queue.join()
+                        action_group_file = action_groups_dict.get(oneResponse)
+                        if action_group_file:
+                            print(f"Putting into queue: {action_group_file}")
+                            command_queue.put(action_group_file)  # Add command to queue
+                            print(f"this is the entire queue {list(command_queue.queue)}")
+                        else:
+                            print("❌ No valid action group file found for response:", oneResponse)
                 
                 os.remove("temp.wav")
 
