@@ -124,12 +124,20 @@ if __name__ == "__main__":
 
                 data = response.json()
                 responseString = data.get("gpt_analysis")
-                action_group_file = action_groups_dict.get(responseString)
-                
-                if action_group_file:
-                    command_queue.put(action_group_file)  # Add command to queue
-                else:
-                    print("❌ No valid action group file found for response:", responseString)
+                for oneResponse in responseString:
+                    action_group_file = action_groups_dict.get(oneResponse)
+                    if action_group_file:
+                        print(f"Putting into queue: {action_group_file}")
+                        command_queue.put(action_group_file)  # Add command to queue
+                    else:
+                        print("❌ No valid action group file found for response:", oneResponse)
+                   
+                   
+                # if action_group_file:
+                #     command_queue.put(action_group_file)  # Add command to queue
+                # else:
+                #     print("❌ No valid action group file found for response:", responseString)
+
                 
                 os.remove("temp.wav")
 
