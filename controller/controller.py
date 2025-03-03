@@ -10,6 +10,7 @@ import queue
 from dotenv import load_dotenv
 import requests
 from action_groups_dict import action_groups_dict
+from MP3 import MP3
 
 # Localhost, connection to port 9090 on itself
 PUPPYPI_IP = "localhost"
@@ -28,6 +29,11 @@ porcupine = pvporcupine.create(access_key=PICO_ACCESS_KEY, keyword_paths=["RBWak
 pa = pyaudio.PyAudio()
 stream = pa.open(format=pyaudio.paInt16, channels=1, rate=porcupine.sample_rate, 
                 input=True, frames_per_buffer=porcupine.frame_length)
+
+MP3_addr = 0x7b  # I2C address of the MP3 module
+mp3 = MP3(MP3_addr)  # Create MP3 player instance
+mp3.volume(40)  # Adjust higher if needed
+mp3_positive_response = 25
 
 # Queue for WebSocket commands
 command_queue = queue.Queue()
@@ -107,6 +113,7 @@ if __name__ == "__main__":
             result = porcupine.process(pcm.tolist())
             if result >= 0:
                 print("🔥 Wake word detected!")
+                mp3.playNum(mp3_positive_response)
                 record(Output_Filename="temp.wav", Duration=5)
 
                 headers = {
