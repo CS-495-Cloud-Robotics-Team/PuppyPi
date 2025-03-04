@@ -34,7 +34,7 @@ stream = pa.open(format=pyaudio.paInt16, channels=1, rate=porcupine.sample_rate,
 
 MP3_addr = 0x7b  # I2C address of the MP3 module
 mp3 = MP3(MP3_addr)  # Create MP3 player instance
-mp3.volume(40)  # Adjust higher if needed
+mp3.volume(40)  # Highest possible
 mp3_positive_response = 25
 
 # Queue for WebSocket commands
@@ -56,7 +56,7 @@ def on_close(ws, close_status_code, close_msg):
 def websocket_handler():
     """Maintains a persistent WebSocket connection and processes commands from the queue."""
     def on_open(ws):
-        print("WebSocket connected ✅")
+        print("WebSocket connected")
 
     ws = websocket.WebSocketApp(
         WEBSOCKET_URL,
@@ -105,7 +105,7 @@ def record(output_filename):
             if silence_start is None:
                 silence_start = time.time()  # Mark silence start time
             elif time.time() - silence_start > silence_duration:
-                print("🛑 Stopped speaking. Saving recording...")
+                print("Stopped speaking. Saving recording...")
                 break
 
     with wave.open(output_filename, 'wb') as wf:
@@ -114,7 +114,7 @@ def record(output_filename):
         wf.setframerate(16000)
         wf.writeframes(b''.join(frames))
 
-    print(f"💾 Saved recording as {output_filename}")
+    print(f"Saved recording as {output_filename}")
 
 if __name__ == "__main__":
     if not PICO_ACCESS_KEY:
@@ -130,7 +130,7 @@ if __name__ == "__main__":
 
             result = porcupine.process(pcm.tolist())
             if result >= 0:
-                print("🔥 Wake word detected!")
+                print("Wake word detected!")
                 mp3.playNum(mp3_positive_response)
                 record(output_filename="temp.wav")
 
@@ -159,7 +159,8 @@ if __name__ == "__main__":
                             command_queue.put(action_group_file)  # Add command to queue
                             print(f"this is the entire queue {list(command_queue.queue)}")
                         else:
-                            print("❌ No valid action group file found for response:", oneResponse)
+                            print("No valid action group file found for response:", oneResponse)
+                            command_queue.put("shake_head.d6ac")
                 
                 os.remove("temp.wav")
 
