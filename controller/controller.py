@@ -9,6 +9,8 @@ import os
 import queue
 from dotenv import load_dotenv
 import requests
+import time
+import webrtcvad
 from action_groups_dict import action_groups_dict
 from MP3 import MP3
 
@@ -37,6 +39,9 @@ mp3_positive_response = 25
 
 # Queue for WebSocket commands
 command_queue = queue.Queue()
+
+vad = webrtcvad.Vad()
+vad.set_mode(2)
 
 def on_message(ws, message):
     print("Received message: ", message)
@@ -78,25 +83,38 @@ def websocket_handler():
         ws.send(json.dumps(payload))
         print(f"📡 Sent action group command: {action_group_file}")
                 
+def is_speaking(frame):
+    return vad.is_speech(frame, 16000)
 
-def record(Output_Filename, Duration=20):
-    stream = pa.open(format=pyaudio.paInt16, channels=1, rate=44100, input=True, frames_per_buffer=1024)
+def record(output_filename):
+    """Records until the user stops speaking based on WebRTCVAD."""
+    stream = pa.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=320)
     print("🎤 Recording...")
 
     frames = []
-    for _ in range(int(44100 / 1024 * Duration)):
-        data = stream.read(1024)
-        frames.append(data)
+    silence_duration = 1.5  # Stop recording after this many seconds of silence
+    silence_start = None
 
-    print("🎤 Recording finished.")
-    
-    with wave.open(Output_Filename, 'wb') as wf:
+    while True:
+        frame = stream.read(320)
+        frames.append(frame)
+
+        if is_speaking(frame):
+            silence_start = None  # Reset silence timer if speech is detected
+        else:
+            if silence_start is None:
+                silence_start = time.time()  # Mark silence start time
+            elif time.time() - silence_start > silence_duration:
+                print("🛑 Stopped speaking. Saving recording...")
+                break
+
+    with wave.open(output_filename, 'wb') as wf:
         wf.setnchannels(1)
         wf.setsampwidth(pa.get_sample_size(pyaudio.paInt16))
-        wf.setframerate(44100)
+        wf.setframerate(16000)
         wf.writeframes(b''.join(frames))
 
-    print(f"💾 Saved recording as {Output_Filename}")
+    print(f"💾 Saved recording as {output_filename}")
 
 if __name__ == "__main__":
     if not PICO_ACCESS_KEY:
@@ -114,7 +132,7 @@ if __name__ == "__main__":
             if result >= 0:
                 print("🔥 Wake word detected!")
                 mp3.playNum(mp3_positive_response)
-                record(Output_Filename="temp.wav", Duration=5)
+                record(output_filename="temp.wav")
 
                 headers = {
                     'Content-Type': 'audio/wav',
