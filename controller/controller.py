@@ -81,7 +81,7 @@ def websocket_handler():
             }
         }
         ws.send(json.dumps(payload))
-        print(f"📡 Sent action group command: {action_group_file}")
+        print(f"Sent action group command: {action_group_file}")
                 
 def is_speaking(frame):
     return vad.is_speech(frame, 16000)
@@ -122,7 +122,7 @@ if __name__ == "__main__":
 
     # Start WebSocket handler in a separate thread
     threading.Thread(target=websocket_handler, daemon=True).start()
-    print("🎙 Listening...")
+    print("Listening...")
     try:
         while True:
             pcm = stream.read(porcupine.frame_length, exception_on_overflow=False)
