@@ -89,7 +89,7 @@ def is_speaking(frame):
 def record(output_filename):
     """Records until the user stops speaking based on WebRTCVAD."""
     stream = pa.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=320)
-    print("🎤 Recording...")
+    print("Recording...")
 
     frames = []
     silence_duration = 1.5  # Stop recording after this many seconds of silence
