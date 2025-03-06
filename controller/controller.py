@@ -88,17 +88,23 @@ def is_speaking(frame):
     return vad.is_speech(frame, 16000)
 
 def record():
-    """Records until the user stops speaking based on WebRTCVAD."""
+    """
+    Records audio from the microphone until the user stops speaking,
+    using WebRTC Voice Activity Detection (VAD).
+    
+    Returns:
+        io.BytesIO: A WAV audio buffer containing the recorded audio.
+    """
     stream = pa.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=320)
     print("Recording...")
 
-    frames = []
+    audio_frames = []
     silence_duration = 1.5  # Stop recording after this many seconds of silence
     silence_start = None
 
     while True:
         frame = stream.read(320)
-        frames.append(frame)
+        audio_frames.append(frame)
 
         if is_speaking(frame):
             silence_start = None  # Reset silence timer if speech is detected
@@ -108,18 +114,54 @@ def record():
             elif time.time() - silence_start > silence_duration:
                 print("Stopped speaking. Saving recording...")
                 break
-
+    
+    # Save recorded audio to an in-memory WAV file
     audio_buffer = io.BytesIO()
     with wave.open(audio_buffer, 'wb') as wf:
         wf.setnchannels(1)
         wf.setsampwidth(pa.get_sample_size(pyaudio.paInt16))
         wf.setframerate(16000)
-        wf.writeframes(b''.join(frames))
+        wf.writeframes(b''.join(audio_frames))
         
-    # Seek to the start of the buffer so it can be read later
+    # Rewind audio_buffer for future reading
     audio_buffer.seek(0)
 
     return audio_buffer
+
+def record_and_process():
+    print("Wake word detected!")
+    mp3.playNum(mp3_positive_response)
+    audio_buffer = record()
+
+    headers = {
+        'Content-Type': 'audio/wav',
+        'x-api-key': os.getenv("COMMAND_API_KEY"),
+    }
+    
+    data = audio_buffer.read()
+
+    response = requests.post(
+        'https://1fl0qfare6.execute-api.us-east-1.amazonaws.com/default/puppyPiProcessingFunction',
+        headers=headers,
+        data=data,
+    )
+    
+    data = response.json()
+    print(data)
+    responseString = data.get("gpt_analysis")
+    if responseString:
+        for oneResponse in responseString:
+            command_queue.join()
+            action_group_file = action_groups_dict.get(oneResponse)
+            if action_group_file:
+                print(f"Putting into queue: {action_group_file}")
+                command_queue.put(action_group_file)  # Add command to queue
+                print(f"this is the entire queue {list(command_queue.queue)}")
+            else:
+                print("No valid action group file found for response:", oneResponse)
+                command_queue.put("shake_head.d6ac")
+    
+    audio_buffer.close()
 
 if __name__ == "__main__":
     if not PICO_ACCESS_KEY:
@@ -134,40 +176,11 @@ if __name__ == "__main__":
             pcm = np.frombuffer(pcm, dtype=np.int16)
 
             result = porcupine.process(pcm.tolist())
+            
+            # check if wake word is detected
             if result >= 0:
-                print("Wake word detected!")
-                mp3.playNum(mp3_positive_response)
-                audio_buffer = record()
-
-                headers = {
-                    'Content-Type': 'audio/wav',
-                    'x-api-key': os.getenv("COMMAND_API_KEY"),
-                }
-                
-                data = audio_buffer.read()
-
-                response = requests.post(
-                    'https://1fl0qfare6.execute-api.us-east-1.amazonaws.com/default/puppyPiProcessingFunction',
-                    headers=headers,
-                    data=data,
-                )
-                
-                data = response.json()
-                print(data)
-                responseString = data.get("gpt_analysis")
-                if responseString:
-                    for oneResponse in responseString:
-                        command_queue.join()
-                        action_group_file = action_groups_dict.get(oneResponse)
-                        if action_group_file:
-                            print(f"Putting into queue: {action_group_file}")
-                            command_queue.put(action_group_file)  # Add command to queue
-                            print(f"this is the entire queue {list(command_queue.queue)}")
-                        else:
-                            print("No valid action group file found for response:", oneResponse)
-                            command_queue.put("shake_head.d6ac")
-                
-                audio_buffer.close()
+                # record and send audio to cloud, recieve a list of commands, and run them
+                record_and_process()
 
     except KeyboardInterrupt:
         print("Stopping...")
