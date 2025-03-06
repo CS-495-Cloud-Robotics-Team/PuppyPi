@@ -13,6 +13,7 @@ import time
 import webrtcvad
 from action_groups_dict import action_groups_dict
 from MP3 import MP3
+import io
 
 # Localhost, connection to port 9090 on itself
 PUPPYPI_IP = "localhost"
@@ -41,7 +42,7 @@ mp3_positive_response = 25
 command_queue = queue.Queue()
 
 vad = webrtcvad.Vad()
-vad.set_mode(2)
+vad.set_mode(3)
 
 def on_message(ws, message):
     print("Received message: ", message)
@@ -86,7 +87,7 @@ def websocket_handler():
 def is_speaking(frame):
     return vad.is_speech(frame, 16000)
 
-def record(output_filename):
+def record():
     """Records until the user stops speaking based on WebRTCVAD."""
     stream = pa.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=320)
     print("Recording...")
@@ -108,13 +109,17 @@ def record(output_filename):
                 print("Stopped speaking. Saving recording...")
                 break
 
-    with wave.open(output_filename, 'wb') as wf:
+    audio_buffer = io.BytesIO()
+    with wave.open(audio_buffer, 'wb') as wf:
         wf.setnchannels(1)
         wf.setsampwidth(pa.get_sample_size(pyaudio.paInt16))
         wf.setframerate(16000)
         wf.writeframes(b''.join(frames))
+        
+    # Seek to the start of the buffer so it can be read later
+    audio_buffer.seek(0)
 
-    print(f"Saved recording as {output_filename}")
+    return audio_buffer
 
 if __name__ == "__main__":
     if not PICO_ACCESS_KEY:
@@ -132,14 +137,14 @@ if __name__ == "__main__":
             if result >= 0:
                 print("Wake word detected!")
                 mp3.playNum(mp3_positive_response)
-                record(output_filename="temp.wav")
+                audio_buffer = record()
 
                 headers = {
                     'Content-Type': 'audio/wav',
                     'x-api-key': os.getenv("COMMAND_API_KEY"),
                 }
-                with open('temp.wav', 'rb') as f:
-                    data = f.read()
+                
+                data = audio_buffer.read()
 
                 response = requests.post(
                     'https://1fl0qfare6.execute-api.us-east-1.amazonaws.com/default/puppyPiProcessingFunction',
@@ -162,7 +167,7 @@ if __name__ == "__main__":
                             print("No valid action group file found for response:", oneResponse)
                             command_queue.put("shake_head.d6ac")
                 
-                os.remove("temp.wav")
+                audio_buffer.close()
 
     except KeyboardInterrupt:
         print("Stopping...")
