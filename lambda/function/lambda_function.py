@@ -49,26 +49,22 @@ def get_secret():
     client = boto3.client("secretsmanager", region_name=region_name)
 
     try:
-        get_secret_value_response = client.get_secret_value(
-            SecretId=secret_name
-        )
+        get_secret_value_response = client.get_secret_value(SecretId=secret_name)
+        secret_string = get_secret_value_response['SecretString']
+        secret_dict = json.loads(secret_string)
+        return secret_dict.get("key")
     except ClientError as e:
-        raise e
-
-    #Parse response and grab the API key
-    secret_string = get_secret_value_response['SecretString']
-    secret_dict = json.loads(secret_string)
-    return secret_dict.get("key")
+        print(f"Error retrieving secret: {e}")
+        return None
+    except json.JSONDecodeError as e:
+        print(f"Error decoding secret JSON: {e}")
+        return None 
+    except Exception as e:
+        print(f"Non-trivial error: {e}")
+        return None
 
 def lambda_handler(event, context):
 
-    '''
-    TODO: Verify that exceptions return proper result to PuppyPi
-    TODO: Prompt engineering for GPT
-    TODO: Maybe add verification stage for GPT output?
-    TODO: Return information to the PuppyPi
-    '''
-    
     api_key = get_secret()
     if api_key is None: # check if our api key retrieval failed
         return {
@@ -85,10 +81,12 @@ def lambda_handler(event, context):
         }
 
     try:
-        # Decode the Base64-encoded WAV file received from API Gateway, may need to be verified
         file_content = base64.b64decode(event["body"])
+    except Exception as e:
+        return {"statusCode": 400, "body": json.dumps({"error": f"Invalid base64 encoding: {e}"})}
 
         # Save file temporarily for Whisper API since it requires a file format and not binary
+    try:
         with tempfile.NamedTemporaryFile(delete=True, suffix=".wav") as temp_audio:
             temp_audio.write(file_content)
             temp_audio.flush()  # Ensure data is written before passing it to Whisper
@@ -113,15 +111,14 @@ def lambda_handler(event, context):
                 "gpt_analysis": gpt_response
             })
         }
+    except openai.error.OpenAIError as e:
+        return {"statusCode": 500, "body": json.dumps({"error": f"OpenAI API error: {str(e)}"})}
     except Exception as e:
-        return {
-            "statusCode": 500,
-            "body": json.dumps({"error": str(e)})
-        }
+        return {"statusCode": 500, "body": json.dumps({"error": f"Unexpected error: {str(e)}"})}
 
     return {
                 "statusCode": 400,
-                "body": json.dumps({"Error": "Reached end of API"})
+                "body": json.dumps({"Error": "Reached end of lambda_handler"})
             }
 
 def interpret_audio(transcription_text):
@@ -151,14 +148,28 @@ def interpret_audio(transcription_text):
 
     """
 
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": transcription_text}
-        ]
-    )
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": transcription_text}
+            ]
+        )
 
-    # Extract and return the list of commands
-    command_list = json.loads(response["choices"][0]["message"]["content"])
-    return command_list
+        if "choices" not in response or not response["choices"]:
+            raise ValueError("Invalid OpenAI response format")
+
+        # Extract and return the list of commands
+        command_list = json.loads(response["choices"][0]["message"]["content"])
+        if not isinstance(command_list, list):
+            raise ValueError("Unexpected response format: not a list")
+        return command_list
+    except json.JSONDecodeError:
+        return ["error"]
+    except openai.error.OpenAIError as e:
+        print(f"OpenAI API error: {e}")
+        return ["error"]
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return ["error"]
