@@ -15,6 +15,8 @@ from action_groups_dict import action_groups_dict
 from MP3 import MP3
 import io
 
+task_done_event = threading.Event()
+
 # Localhost, connection to port 9090 on itself
 PUPPYPI_IP = "localhost"
 # WebSocket URL (rosbridge default is ws://<PuppyPi-IP>:9090)
@@ -46,7 +48,7 @@ vad.set_mode(3)
 
 def on_message(ws, message):
     print("Received message: ", message)
-    command_queue.task_done()
+    task_done_event.set()
 
 def on_error(ws, error):
     print("Error: ", error)
@@ -70,6 +72,7 @@ def websocket_handler():
     # Run WebSocket in a separate thread
     wst = threading.Thread(target=ws.run_forever, daemon=True)
     wst.start()
+    
 
     while True:
         action_group_file = command_queue.get()  # Wait for a command
@@ -83,6 +86,9 @@ def websocket_handler():
         }
         ws.send(json.dumps(payload))
         print(f"Sent action group command: {action_group_file}")
+        task_done_event.wait() 
+        print(f"sending another command")
+        task_done_event.clear()
                 
 def is_speaking(frame):
     return vad.is_speech(frame, 16000)
@@ -151,7 +157,6 @@ def record_and_process():
     responseString = data.get("gpt_analysis")
     if responseString:
         for oneResponse in responseString:
-            command_queue.join()
             action_group_file = action_groups_dict.get(oneResponse)
             if action_group_file:
                 print(f"Putting into queue: {action_group_file}")
@@ -159,10 +164,15 @@ def record_and_process():
                 print(f"this is the entire queue {list(command_queue.queue)}")
             else:
                 print("No valid action group file found for response:", oneResponse)
-                command_queue.put("shake_head.d6ac")
+                # command_queue.put("shake_head.d6ac")
     
     audio_buffer.close()
-
+    
+# def puppypi_force_stop():
+#     print("resetting queue")
+#     while not command_queue.empty():
+#         command_queue.get()
+    
 if __name__ == "__main__":
     if not PICO_ACCESS_KEY:
         raise ValueError("Make sure you have an .env file with PICO_ACCESS_KEY for picovoice.")
