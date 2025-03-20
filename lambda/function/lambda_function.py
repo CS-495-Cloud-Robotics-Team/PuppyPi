@@ -25,6 +25,7 @@ def get_commands():
         # "place-main",
         # "place-alt",
         "push-up",
+        "run",
         "shake-hands",
         "shake-head",
         "sit",
@@ -33,10 +34,15 @@ def get_commands():
         "stand",
         # "stand-with-arm",
         "stretch",
+        "turn-around",
+        "turn-left",
+        "turn-right",
         # "up-stairs-2cm",
         # "up-stairs-3.5cm",
         # "up-stairs-3.5cm-alt0",
         # "up-stairs-3.5cm-alt1",
+        "walk",
+        "walk-backward",
         "wave"
     ]
 
