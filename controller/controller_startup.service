@@ -1,0 +1,20 @@
+[Unit]
+Description=Controller Startup Service
+After=network-online.target docker.service start_node.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+AmbientCapabilities=CAP_SYS_ADMIN
+WorkingDirectory=/home/pi/controller
+ExecStartPre=/bin/sleep 30
+ExecStart=/usr/bin/python3 /home/pi/controller/controller.py
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+EnvironmentFile=/home/pi/controller/env_vars.txt
+
+[Install]
+WantedBy=multi-user.target
