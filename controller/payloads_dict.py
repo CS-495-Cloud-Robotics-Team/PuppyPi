@@ -154,17 +154,6 @@ payloads_dict = {
             }
         },
         {
-        "op": "call_service",
-        "service": "/puppy_control/runActionGroup",
-        "args": {
-            "name": "stand.d6ac",
-            "wait": True
-        }
-        },
-        {
-            "wait": 0.2
-        },
-        {
         "op": "publish",
             "topic": "/cmd_vel",
             "msg": {
@@ -174,14 +163,6 @@ payloads_dict = {
         },
         {
             "wait": 2.5
-        },
-        {
-        "op": "publish",
-            "topic": "/cmd_vel",
-            "msg": {
-                "linear": {"x": 0.0, "y": 0.0, "z": 0.0},
-                "angular": {"x": 0.0, "y": 0.0, "z": 0.0}
-            }
         }
     ],
     "shake-hands": {
@@ -332,7 +313,7 @@ payloads_dict = {
                 "linear": {"x": 0.0, "y": 0.0, "z": 0.0},
                 "angular": {"x": 0.0, "y": 0.0, "z": 0.0}
             }
-        }
+        },
     ],
     "turn-right": [
         {
@@ -371,7 +352,7 @@ payloads_dict = {
                 "linear": {"x": 0.0, "y": 0.0, "z": 0.0},
                 "angular": {"x": 0.0, "y": 0.0, "z": 0.0}
             }
-        }
+        },
     ],
     "up-stairs-2cm": {
         "op": "call_service",
@@ -422,17 +403,6 @@ payloads_dict = {
             }
         },
         {
-        "op": "call_service",
-        "service": "/puppy_control/runActionGroup",
-        "args": {
-            "name": "stand.d6ac",
-            "wait": True
-        }
-        },
-        {
-            "wait": 0.2
-        },
-        {
         "op": "publish",
             "topic": "/cmd_vel",
             "msg": {
@@ -461,17 +431,6 @@ payloads_dict = {
             }
         },
         {
-        "op": "call_service",
-        "service": "/puppy_control/runActionGroup",
-        "args": {
-            "name": "stand.d6ac",
-            "wait": True
-        }
-        },
-        {
-            "wait": 0.2
-        },
-        {
         "op": "publish",
             "topic": "/cmd_vel",
             "msg": {
@@ -490,6 +449,7 @@ payloads_dict = {
                 "angular": {"x": 0.0, "y": 0.0, "z": 0.0}
             }
         }
+        
     ],
 
     "dance_routine": [
