@@ -154,6 +154,17 @@ payloads_dict = {
             }
         },
         {
+        "op": "call_service",
+        "service": "/puppy_control/runActionGroup",
+        "args": {
+            "name": "stand.d6ac",
+            "wait": True
+        }
+        },
+        {
+            "wait": 0.2
+        },
+        {
         "op": "publish",
             "topic": "/cmd_vel",
             "msg": {
@@ -403,6 +414,17 @@ payloads_dict = {
             }
         },
         {
+        "op": "call_service",
+        "service": "/puppy_control/runActionGroup",
+        "args": {
+            "name": "stand.d6ac",
+            "wait": True
+        }
+        },
+        {
+            "wait": 0.2
+        },
+        {
         "op": "publish",
             "topic": "/cmd_vel",
             "msg": {
@@ -429,6 +451,17 @@ payloads_dict = {
             "args": {
                 "data": True
             }
+        },
+        {
+        "op": "call_service",
+        "service": "/puppy_control/runActionGroup",
+        "args": {
+            "name": "stand.d6ac",
+            "wait": True
+        }
+        },
+        {
+            "wait": 0.2
         },
         {
         "op": "publish",
