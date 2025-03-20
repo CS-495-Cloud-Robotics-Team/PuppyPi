@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 import requests
 import time
 import webrtcvad
-from action_groups_dict import action_groups_dict
+from payloads_dict import payloads_dict
 from MP3 import MP3
 import io
 
@@ -75,20 +75,37 @@ def websocket_handler():
     
 
     while True:
-        action_group_file = command_queue.get()  # Wait for a command
-        payload = {
-            "op": "call_service",
-            "service": "/puppy_control/runActionGroup",
-            "args": {
-                "name": action_group_file,  
-                "wait": True  
-            }
-        }
-        ws.send(json.dumps(payload))
-        print(f"Sent action group command: {action_group_file}")
-        task_done_event.wait() 
-        print(f"sending another command")
-        task_done_event.clear()
+        payload = command_queue.get()  # Wait for a command
+        print(f"payload is {payload}")
+        
+        if isinstance(payload, list):  # Check if it's a list of commands
+            for command in payload:
+                ws.send(json.dumps(command))
+                print(f"Sent command: {command}")
+                # Check if the command has a "wait" key
+                if isinstance(command, dict) and "wait" in command:
+                    wait_time = command["wait"]
+                    print(f"Waiting for {wait_time} seconds...")
+                    time.sleep(wait_time)  # Sleep for the specified wait time
+                else:
+                    print("No wait time specified. Proceeding without delay.")
+            task_done_event.wait()
+            task_done_event.clear()
+        else:
+            # Handle single command
+            ws.send(json.dumps(payload))
+            print(f"Sent payload: {payload}")
+            task_done_event.wait()
+            task_done_event.clear()
+            # Check if the payload has a "wait" key
+            if isinstance(payload, dict) and "wait" in payload:
+                wait_time = payload["wait"]
+                print(f"Waiting for {wait_time} seconds...")
+                time.sleep(wait_time)  # Sleep for the specified wait time
+            else:
+                print("No wait time specified. Proceeding without delay.")
+                
+
                 
 def is_speaking(frame):
     return vad.is_speech(frame, 16000)
@@ -157,14 +174,15 @@ def record_and_process():
     responseString = data.get("gpt_analysis")
     if responseString:
         for oneResponse in responseString:
-            action_group_file = action_groups_dict.get(oneResponse)
-            if action_group_file:
-                print(f"Putting into queue: {action_group_file}")
-                command_queue.put(action_group_file)  # Add command to queue
-                print(f"this is the entire queue {list(command_queue.queue)}")
+            payload = payloads_dict.get(oneResponse)
+            
+            if payload:
+                print(f"Adding to queue: {payload}")
+                command_queue.put(payload)  # Add command(s) to queue
+                print(f"Queue contents: {list(command_queue.queue)}")
             else:
                 print("No valid action group file found for response:", oneResponse)
-                # command_queue.put("shake_head.d6ac")
+                command_queue.put(payloads_dict.get("shake-head"))
     
     audio_buffer.close()
     
