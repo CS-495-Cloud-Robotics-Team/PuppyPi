@@ -145,6 +145,26 @@ payloads_dict = {
             "wait": True
         }
     },
+    "run": [
+        {
+        "op": "call_service",
+            "service": "/puppy_control/set_running",
+            "args": {
+                "data": True
+            }
+        },
+        {
+        "op": "publish",
+            "topic": "/cmd_vel",
+            "msg": {
+                "linear": {"x": 2.0, "y": 0.0, "z": 0.0},
+                "angular": {"x": 0.0, "y": 0.0, "z": 0.0}
+            }
+        },
+        {
+            "wait": 2.5
+        }
+    ],
     "shake-hands": {
         "op": "call_service",
         "service": "/puppy_control/runActionGroup",
@@ -161,42 +181,14 @@ payloads_dict = {
             "wait": True
         }
     },
-    "sit": [
-        {
+    "sit": {
         "op": "call_service",
-            "service": "/puppy_control/set_running",
-            "args": {
-                "data": True
-            }
-        },
-        {
-        "op": "publish",
-            "topic": "/cmd_vel",
-            "msg": {
-                "linear": {"x": 1.0, "y": 0.0, "z": 0.0},
-                "angular": {"x": 0.0, "y": 0.0, "z": 1.5}
-            }
-        },
-        #time.sleep(10),
-        {"wait": 2.5},
-        {
-        "op": "publish",
-            "topic": "/cmd_vel",
-            "msg": {
-                "linear": {"x": 1.0, "y": 0.0, "z": 0.0},
-                "angular": {"x": 0.0, "y": 0.0, "z": 0.0}
-            }
-        },
-        {"wait": 2.5},
-        {
-        "op": "publish",
-            "topic": "/cmd_vel",
-            "msg": {
-                "linear": {"x": 0.0, "y": 0.0, "z": 0.0},
-                "angular": {"x": 0.0, "y": 0.0, "z": 0.0}
-            }
+        "service": "/puppy_control/runActionGroup",
+        "args": {
+            "name": "sit.d6ac",
+            "wait": True
         }
-    ],
+    },
     "spacewalk": {
         "op": "call_service",
         "service": "/puppy_control/runActionGroup",
@@ -245,6 +237,99 @@ payloads_dict = {
             "wait": True
         }
     },
+    "turn-around": [
+        {
+        "op": "call_service",
+            "service": "/puppy_control/set_running",
+            "args": {
+                "data": True
+            }
+        },
+        {
+        "op": "call_service",
+        "service": "/puppy_control/runActionGroup",
+        "args": {
+            "name": "stand.d6ac",
+            "wait": True
+        }
+        },
+        {
+            "wait": 0.2
+        },
+        {
+        "op": "publish",
+            "topic": "/cmd_vel",
+            "msg": {
+                "linear": {"x": 0.0, "y": 0.0, "z": 0.0},
+                "angular": {"x": 0.0, "y": 0.0, "z": 1.5}
+            }
+        },
+        {
+            "wait": 4.06
+        }
+    ],
+    "turn-left": [
+        {
+        "op": "call_service",
+            "service": "/puppy_control/set_running",
+            "args": {
+                "data": True
+            }
+        },
+        {
+        "op": "call_service",
+        "service": "/puppy_control/runActionGroup",
+        "args": {
+            "name": "stand.d6ac",
+            "wait": True
+        }
+        },
+        {
+            "wait": 0.2
+        },
+        {
+        "op": "publish",
+            "topic": "/cmd_vel",
+            "msg": {
+                "linear": {"x": 0.0, "y": 0.0, "z": 0.0},
+                "angular": {"x": 0.0, "y": 0.0, "z": 1.5}
+            }
+        },
+        {
+            "wait": 2.03
+        }
+    ],
+    "turn-right": [
+        {
+        "op": "call_service",
+            "service": "/puppy_control/set_running",
+            "args": {
+                "data": True
+            }
+        },
+        {
+        "op": "call_service",
+        "service": "/puppy_control/runActionGroup",
+        "args": {
+            "name": "stand.d6ac",
+            "wait": True
+        }
+        },
+        {
+            "wait": 0.2
+        },
+        {
+        "op": "publish",
+            "topic": "/cmd_vel",
+            "msg": {
+                "linear": {"x": 0.0, "y": 0.0, "z": 0.0},
+                "angular": {"x": 0.0, "y": 0.0, "z": -1.5}
+            }
+        },
+        {
+            "wait": 2.03
+        }
+    ],
     "up-stairs-2cm": {
         "op": "call_service",
         "service": "/puppy_control/runActionGroup",
@@ -297,9 +382,32 @@ payloads_dict = {
         "op": "publish",
             "topic": "/cmd_vel",
             "msg": {
-                "linear": {"x": 1.5, "y": 0.0, "z": 0.0},
+                "linear": {"x": 1.0, "y": 0.0, "z": 0.0},
                 "angular": {"x": 0.0, "y": 0.0, "z": 0.0}
             }
+        },
+        {
+            "wait": 2.5
+        }
+    ],
+    "walk-backward": [
+        {
+        "op": "call_service",
+            "service": "/puppy_control/set_running",
+            "args": {
+                "data": True
+            }
+        },
+        {
+        "op": "publish",
+            "topic": "/cmd_vel",
+            "msg": {
+                "linear": {"x": -1.0, "y": 0.0, "z": 0.0},
+                "angular": {"x": 0.0, "y": 0.0, "z": 0.0}
+            }
+        },
+        {
+            "wait": 2.5
         }
     ],
 
