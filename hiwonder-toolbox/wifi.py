@@ -177,13 +177,7 @@ if __name__ == "__main__":
             disconnect() 
             count = 0
             while True:
-                p = subprocess.Popen([
-    'nmcli', 'device', 'wifi', 'connect', WIFI_STA_SSID,
-    '802-1x.identity', 'wataylor1@crimson.ua.edu',
-    '802-1x.password', WIFI_STA_PASSWORD,
-    '802-1x.eap', 'peap',
-    '802-1x.phase2-auth', 'mschapv2'
-], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                p = subprocess.Popen(['nmcli', 'device', 'wifi', 'connect', WIFI_STA_SSID, 'password', WIFI_STA_PASSWORD], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 stdout, stderr = p.communicate()
                 if p.returncode != 0:
                     time.sleep(2)
