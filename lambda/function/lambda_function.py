@@ -3,6 +3,8 @@ import boto3
 import base64
 import openai
 import tempfile
+import gzip
+import io
 from botocore.exceptions import ClientError
 
 def get_commands():
@@ -88,6 +90,10 @@ def lambda_handler(event, context):
 
     try:
         file_content = base64.b64decode(event["body"])
+        is_gzip = event.get("headers", {}).get("Content-Encoding") == "gzip"
+        if is_gzip:
+            with gzip.GzipFile(fileobj=io.BytesIO(file_content), mode="rb") as gz:
+                file_content = gz.read()
     except Exception as e:
         return {"statusCode": 400, "body": json.dumps({"error": f"Invalid base64 encoding: {e}"})}
 
