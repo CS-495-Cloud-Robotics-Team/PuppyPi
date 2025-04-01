@@ -124,10 +124,16 @@ def record():
     audio_frames = []
     silence_duration = 1.5  # Stop recording after this many seconds of silence
     silence_start = None
+    start_time = time.time()
+    max_duration = 10 #seconds
 
     while True:
         frame = stream.read(320)
         audio_frames.append(frame)
+        
+        if time.time() - start_time >= max_duration:
+            print("Time is up. Saving recording...")
+            break
 
         if is_speaking(frame):
             silence_start = None  # Reset silence timer if speech is detected
