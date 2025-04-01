@@ -29,7 +29,7 @@ load_dotenv("/home/pi/.env")
 PICO_ACCESS_KEY = os.getenv("PICO_ACCESS_KEY")
 
 #Replace file with custom, to activate this one say "PicoVoice"
-porcupine = pvporcupine.create(access_key=PICO_ACCESS_KEY, keyword_paths=["RBWakeWordTrained.ppn"]) 
+porcupine = pvporcupine.create(access_key=PICO_ACCESS_KEY, keyword_paths=["ScuffyWakeWord.ppn"]) 
 
 pa = pyaudio.PyAudio()
 stream = pa.open(format=pyaudio.paInt16, channels=1, rate=porcupine.sample_rate, 
@@ -84,6 +84,9 @@ def websocket_handler():
                 print(f"Sent command: {command}")
                 # Check if the command has a "wait" key
                 if isinstance(command, dict) and "wait" in command:
+                    # if command == "walk":
+                    #     walk_time = 5.0  # Change this to any desired time
+                    #     json_command = json.dumps(payloads_dict).replace("{{walk_time}}", str(walk_time))
                     wait_time = command["wait"]
                     print(f"Waiting for {wait_time} seconds...")
                     time.sleep(wait_time)  # Sleep for the specified wait time
