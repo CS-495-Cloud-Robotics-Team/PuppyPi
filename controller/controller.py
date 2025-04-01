@@ -158,7 +158,12 @@ def record():
     # Rewind audio_buffer for future reading
     audio_buffer.seek(0)
 
-    return audio_buffer
+    compressed_audio = io.BytesIO()
+    with gzip.GzipFile(fileobj=compressed_audio, mode="wb") as gz:
+        gz.write(audio_buffer.getvalue())
+
+    compressed_audio.seek(0)
+    return compressed_audio
 
 def record_and_process():
     print("Wake word detected!")
@@ -166,7 +171,7 @@ def record_and_process():
     audio_buffer = record()
 
     headers = {
-        'Content-Type': 'audio/wav',
+        'Content-Type': 'application/gzip',
         'x-api-key': os.getenv("COMMAND_API_KEY"),
     }
     
