@@ -10,6 +10,7 @@ import queue
 from dotenv import load_dotenv
 import requests
 import time
+import gzip
 import webrtcvad
 from payloads_dict import payloads_dict
 from MP3 import MP3
