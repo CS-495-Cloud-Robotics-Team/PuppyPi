@@ -10,6 +10,7 @@ import queue
 from dotenv import load_dotenv
 import requests
 import time
+from pydub import AudioSegment
 import webrtcvad
 from payloads_dict import payloads_dict
 from MP3 import MP3
@@ -157,12 +158,20 @@ def record():
         
     # Rewind audio_buffer for future reading
     audio_buffer.seek(0)
+    audio = AudioSegment.from_wav(audio_buffer)  # Load from BytesIO
+    audio = audio.set_frame_rate(8000).set_channels(1)  # Resample and convert to mono
 
-    return audio_buffer
+    # Save to new buffer
+    processed_audio_buffer = io.BytesIO()
+    audio.export(processed_audio_buffer, format="wav")  # Export back to BytesIO
+    processed_audio_buffer.seek(0)  # Reset buffer position
+
+    return processed_audio_buffer
 
 def record_and_process():
     print("Wake word detected!")
     mp3.playNum(mp3_positive_response)
+    time.sleep(1.02) #length of bark
     audio_buffer = record()
 
     headers = {
