@@ -139,6 +139,7 @@ def interpret_audio(transcription_text):
     - Only include commands from this list: {", ".join(get_commands())}.
     - If a command cannot be determined, exclude it.
     - If the user input is completely unrelated, return `["error"]`.
+    - An exception is if the user input is walk then a number, return `["walk", x]` where x is the number they said
     - Under no circumstances should you deviate from the response format.
 
     Example Inputs & Outputs:
@@ -148,6 +149,9 @@ def interpret_audio(transcription_text):
       
     - Input: "Bow, shake hands, and wave"
       Output: `["bow", "shake-hands", "wave"]`
+      
+    - Input: "Walk for 5 seconds, then do the moonwalk"
+      Output: `["walk", 5, "moonwalk"]`
 
     - Input: "Do a backflip" (not a valid command)
       Output: `["error"]`
