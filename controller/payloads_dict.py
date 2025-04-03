@@ -174,6 +174,14 @@ payloads_dict = {
         },
         {
             "wait": 2.5
+        },
+        {
+        "op": "publish",
+            "topic": "/cmd_vel",
+            "msg": {
+                "linear": {"x": 0.0, "y": 0.0, "z": 0.0},
+                "angular": {"x": 0.0, "y": 0.0, "z": 0.0}
+            }
         }
     ],
     "shake-hands": {

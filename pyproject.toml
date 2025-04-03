@@ -1,0 +1,8 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "PuppyPi-CS495-CloudRobotics"
+authors = [{name = "Archer Taylor, Olivia Monteiro, Alicia Reed, Danny Steuer, Eli Weber", email = ""}]
+dynamic = ["version", "description"]
