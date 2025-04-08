@@ -85,9 +85,12 @@ def websocket_handler():
                 print(f"Sent command: {command}")
                 # Check if the command has a "wait" key
                 if isinstance(command, dict) and "wait" in command:
-                    # if command == "walk":
-                    #     walk_time = 5.0  # Change this to any desired time
-                    #     json_command = json.dumps(payloads_dict).replace("{{walk_time}}", str(walk_time))
+                    if command["wait"] == "{{walk_time}}":
+                        d = command_queue.queue
+                        walk_time = 2.5
+                        if isinstance(d[0], int):
+                            walk_time = command_queue.get()
+                        command["wait"] = walk_time
                     wait_time = command["wait"]
                     print(f"Waiting for {wait_time} seconds...")
                     time.sleep(wait_time)  # Sleep for the specified wait time
@@ -205,8 +208,13 @@ def record_and_process():
                 command_queue.put(payload)  # Add command(s) to queue
                 print(f"Queue contents: {list(command_queue.queue)}")
             else:
-                print("No valid action group file found for response:", oneResponse)
-                command_queue.put(payloads_dict.get("shake-head"))
+                if isinstance(oneResponse, int):
+                    print(f"Adding to queue: {oneResponse}")
+                    command_queue.put(oneResponse)
+                    print(f"Queue contents: {list(command_queue.queue)}")
+                else:
+                    print("No valid action group file found for response:", oneResponse)
+                    command_queue.put(payloads_dict.get("shake-head"))
     
     audio_buffer.close()
     

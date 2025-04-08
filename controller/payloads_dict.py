@@ -441,7 +441,7 @@ payloads_dict = {
             }
         },
         {
-            "wait": 2.5
+            "wait": "{{walk_time}}"
         },
         {
         "op": "publish",
