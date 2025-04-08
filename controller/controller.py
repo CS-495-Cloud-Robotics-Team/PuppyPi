@@ -170,6 +170,12 @@ def record():
 
 def record_and_process():
     print("Wake word detected!")
+
+    if not (command_queue.empty()):
+        while not command_queue.empty():
+            command_queue.get()
+        print("Command queue cleared.")
+    
     mp3.playNum(mp3_positive_response)
     time.sleep(1.02) #length of bark
     audio_buffer = record()
