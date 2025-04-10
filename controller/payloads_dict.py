@@ -240,6 +240,14 @@ payloads_dict = {
             "wait": True
         }
     },
+    "stop": {
+        "op": "publish",
+            "topic": "/cmd_vel",
+            "msg": {
+                "linear": {"x": 0.0, "y": 0.0, "z": 0.0},
+                "angular": {"x": 0.0, "y": 0.0, "z": 0.0}
+            }
+    },
     "stretch": {
         "op": "call_service",
         "service": "/puppy_control/runActionGroup",
