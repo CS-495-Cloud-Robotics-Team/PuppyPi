@@ -178,27 +178,27 @@ if __name__ == "__main__":
             count = 0
             if WIFI_STA_USERNAME:
                 while True:
-                    # Create the connection profile for PEAP/MSCHAPv2
-                    os.system(f'nmcli con add type wifi con-name "{WIFI_STA_SSID}" ifname wlan0 ssid "{WIFI_STA_SSID}"')
-                    os.system(f'nmcli con modify "{WIFI_STA_SSID}" wifi-sec.key-mgmt wpa-eap')
-                    os.system(f'nmcli con modify "{WIFI_STA_SSID}" wifi-sec.eap peap')
-                    os.system(f'nmcli con modify "{WIFI_STA_SSID}" wifi-sec.phase2-auth mschapv2')
-                    os.system(f'nmcli con modify "{WIFI_STA_SSID}" 802-1x.identity "{WIFI_STA_USERNAME}"')
-                    os.system(f'nmcli con modify "{WIFI_STA_SSID}" 802-1x.password "{WIFI_STA_PASSWORD}"')
-                    os.system(f'nmcli con modify "{WIFI_STA_SSID}" 802-1x.ca-cert "/dev/null"')  # No CA certificate
-                    
-                    # Try to connect
-                    p = subprocess.Popen(['nmcli', 'con', 'up', WIFI_STA_SSID], 
-                                        stdout=subprocess.PIPE, 
-                                        stderr=subprocess.PIPE)
-                    stdout, stderr = p.communicate()
-                    if p.returncode != 0:
-                        time.sleep(2)
-                    else:
-                        break
-                    count += 1
-                    if count > 3:
-                        break
+                # Create the connection profile for PEAP/MSCHAPv2 with all settings in one step
+                os.system(f'nmcli connection add type wifi ifname "*" con-name "{WIFI_STA_SSID}" ssid "{WIFI_STA_SSID}" '
+                          f'wifi-sec.key-mgmt wpa-eap '
+                          f'802-1x.eap peap '
+                          f'802-1x.identity "{WIFI_STA_USERNAME}" '
+                          f'802-1x.password "{WIFI_STA_PASSWORD}" '
+                          f'802-1x.phase2-auth mschapv2 '
+                          f'802-1x.anonymous-identity "" '
+                          f'802-1x.ca-cert ""')
+                
+                # Try to connect
+                p = subprocess.Popen(['nmcli', 'con', 'up', WIFI_STA_SSID], 
+                                     stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                stdout, stderr = p.communicate()
+                if p.returncode != 0:
+                    time.sleep(2)
+                else:
+                    break
+                count += 1
+                if count > 3:
+                    break
             else:
                 while True:
                     p = subprocess.Popen(['nmcli', 'device', 'wifi', 'connect', WIFI_STA_SSID, 'password', WIFI_STA_PASSWORD], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
