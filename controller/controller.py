@@ -17,6 +17,7 @@ from MP3 import MP3
 import io
 
 task_done_event = threading.Event()
+stop_event = threading.Event()
 
 # Localhost, connection to port 9090 on itself
 PUPPYPI_IP = "localhost"
@@ -88,12 +89,18 @@ def websocket_handler():
                     if command["wait"] == "{{walk_time}}":
                         d = command_queue.queue
                         walk_time = 2.5
-                        if isinstance(d[0], int):
+                        if isinstance(d[0], float) or isinstance(d[0], int):
                             walk_time = command_queue.get()
+                            print(f"walk time is {walk_time}")
                         command["wait"] = walk_time
                     wait_time = command["wait"]
                     print(f"Waiting for {wait_time} seconds...")
-                    time.sleep(wait_time)  # Sleep for the specified wait time
+                    stop_event.clear()
+                    was_stopped = stop_event.wait(timeout=wait_time)
+                    if was_stopped:
+                        print("Sleep was interrupted!")
+                    else:
+                        print("Completed full sleep")
                 else:
                     print("No wait time specified. Proceeding without delay.")
             task_done_event.wait()
@@ -173,10 +180,15 @@ def record():
 
 def record_and_process():
     print("Wake word detected!")
-
+    
+    stop_event.set()
+    print("full stopping!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     if not (command_queue.empty()):
+        # stop_event.set()
+        # print("full stopping!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         while not command_queue.empty():
             command_queue.get()
+            
         print("Command queue cleared.")
     
     mp3.playNum(mp3_positive_response)
@@ -217,11 +229,6 @@ def record_and_process():
                     command_queue.put(payloads_dict.get("shake-head"))
     
     audio_buffer.close()
-    
-# def puppypi_force_stop():
-#     print("resetting queue")
-#     while not command_queue.empty():
-#         command_queue.get()
     
 if __name__ == "__main__":
     if not PICO_ACCESS_KEY:
