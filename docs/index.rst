@@ -14,6 +14,12 @@ Contents
 --------
 
 .. toctree::
+   :maxdepth: 2
+   :caption: Table of Contents
 
    usage
    api
+   install
+   features
+   extend
+   faq
