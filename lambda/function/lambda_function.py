@@ -44,6 +44,9 @@ def get_commands():
         "walk",
         "walk-backward",
         "wave"
+        "face-detect"
+        "line-following"
+        "color-detect"
     ]
 
 def get_secret():
