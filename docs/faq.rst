@@ -122,8 +122,8 @@ To update API keys:
    - `PICO_ACCESS_KEY`: Picovoice API key
    - `COMMAND_API_KEY`: AWS Lambda key
 
-3. Save the file and restart the controller service:
+3. Save the file and restart the Raspberry Pi:
 
    .. code-block:: zsh
 
-      sudo systemctl restart controller.service
+      sudo reboot raspberrypi
