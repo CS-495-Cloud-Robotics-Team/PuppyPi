@@ -16,11 +16,10 @@ To begin development, SSH into the PuppyPi and navigate to the working directory
 The project’s major components are structured as follows:
 
 - **Wi-Fi Configuration**
-  - Located in: `/home/pi/.env`
-  - Sections to modify:
-    - `WIFI_STA_SSID`
-    - `WIFI_STA_USERNAME`
-    - `WIFI_STA_PASSWORD`
+  - Located in: `/home/pi/hiwonder-toolbox`
+  - Files to modify:
+    - `wifi.py`
+    - `wifi-conf.py`
 
 - **Controller Service**
   - Located in: `/home/pi/controller`
