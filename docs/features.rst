@@ -31,31 +31,29 @@ Technical Features
    * - Component
      - Description
    * - on startup running
-     - When the robot is turned on it automatically
+     - When the robot is turned on it automatically runs controller.py (you can turn this off)
    * - automatic github download
-     - 
+     - When the robot is turned on it automatically pulls from the github with updated code
    * - network interoperability
-     - 
+     - The robot can connect to various networks by going into the raspberry pi and connecting to the specific network via the terminal
    * - pyaudio recording
-     - 
+     - Uses pyaudio library to record and edit audio files input by the user via the mic
    * - noise reduction
-     - 
+     - uses vad python library to limit the amount of audio input to help get a clear command
    * - audio compression
-     - 
+     - uses audio compression techniques to speed up sending audio files to the cloud
    * - Silence based command detection
-     - 
+     - After the robot hears silence for 1.5 seconds it will assume the user has finished saying the command, will also hard stop after 10 seconds to ensure backround noise doesn't make it record forever
    * - Wake Word Detection
-     - 
-   * - Continuous Listening
-     - 
+     - Uses picovoice python library to create a wake word (puppypi/user choice) that detects when the word is said to initalize the prompting
    * - Bluetooth mic
-     - 
+     - optional external bluetooth mic/headset to greatly increase amount of correct audio transmitted to the puppypi (wihtout this there is a large chance the motors drown out users voice)
    * - web socket
-     - 
+     - Uses an external websocket system to send information into the docker file to run specific commands, this way the code isn't deleted on startup
    * - command queue
-     - 
+     - a queue called "command_queue" to store which commands to run in a specific order across threads
    * - payload dictionary
-     - 
+     - A list of payloads connected via command_queue words (ex. "walk") that tell ross what to execute on the puppypi motors
    * - ai prompt
      - 
    * - text transcription
