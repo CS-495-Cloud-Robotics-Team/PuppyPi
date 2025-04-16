@@ -13,10 +13,7 @@ Core Features
    * - Feature Name
      - Description
    * - Voice Command System
-     - Allows control of the robot via vocal commands. 
-Supports all basic movement commands from the original app - 
-these include walking as well as all the Action Group files 
-('Performance' section of the app).
+     - Allows control of the robot via vocal commands. Supports all basic movement commands from the original app - these include walking as well as all the Action Group files ('Performance' section of the app).
    * - Cloud Integration
      - Enables remote control and monitoring through cloud services.
    * - AI Prompt Control
