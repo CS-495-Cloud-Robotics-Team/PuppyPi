@@ -8,7 +8,7 @@ Core Features
 
 .. list-table:: 
    :header-rows: 1
-   :widths: 20 60
+   :widths: 20 20
 
    * - Feature Name
      - Description
@@ -26,7 +26,7 @@ Technical Features
 
 .. list-table::
    :header-rows: 1
-   :widths: 20 60
+   :widths: 20 20
 
    * - Component
      - Description
