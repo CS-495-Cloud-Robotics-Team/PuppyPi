@@ -111,6 +111,7 @@ Project issues and enhancement requests are tracked on GitHub:
 - Occasional GPT issues including seemingly random glitches of PuppyPi not knowing what you're saying
 - Getting overwhelmed by multiple requests or poor network connectivity
 - Low-quality microphones resulting in poor performance and inability to perform certain commands
+- Horrific battery life
 
 Code Style Guidelines
 ---------------------
