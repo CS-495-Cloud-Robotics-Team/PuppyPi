@@ -80,7 +80,7 @@ Due to the physical nature of the robot, **testing is performed manually**.
 
 - **Wake Word & Command Tests**:
   - Speak commands such as:
-    - “Scuffy, find the blue ball”
+    - “Scuffy, do the moonwalk”
     - “Scuffy, walk forward and then turn right”
   - Observe behavioral output.
 
@@ -108,11 +108,14 @@ Project issues and enhancement requests are tracked on GitHub:
 
 - Testing compatibility with newer PuppyPi models (Standard, Advanced, Pro)
 - Enhancing spatial awareness to detect colored objects beyond a few feet (wider-room context tracking)
+- Occasional GPT issues including seemingly random glitches of PuppyPi not knowing what you're saying
+- Getting overwhelmed by multiple requests or poor network connectivity
+- Low-quality microphones resulting in poor performance and inability to perform certain commands
 
 Code Style Guidelines
 ---------------------
 
-- Follow **PEP 8** guidelines for Python code
+- Follow **PEP8** guidelines for Python code
 - Use clear, descriptive variable and function names
 - Comment all critical logic blocks and decisions
 - Avoid hardcoding paths, use configuration files or environment variables where possible
