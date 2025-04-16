@@ -1,0 +1,5 @@
+/* Wrap text in list-tables */
+.rst-content table.docutils td {
+    white-space: normal;
+    word-wrap: break-word;
+}
