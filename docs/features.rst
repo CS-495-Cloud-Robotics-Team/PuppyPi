@@ -17,7 +17,7 @@ Core Features
    * - Cloud Integration
      - Enables remote control and monitoring through cloud services.
    * - AI Prompt Control
-     - Prompts Chat-GPT to interpret spoken phrases into individual commands.
+     - Prompts ChatGPT to interpret spoken phrases into individual commands.
    * - Extended Command Set
      - Adds new capabilities beyond the original app functionality, including chaining multiple commands together and command interruption.
 
