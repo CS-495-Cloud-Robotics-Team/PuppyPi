@@ -90,6 +90,17 @@ To increase the timeout:
 
 Be aware that longer audio files take longer to upload to the cloud and process.
 
+5. How do I create new commands and make the PuppyPi perform them?
+------------------------------------------------------------------
+
+This can be done through the use of ROS, websockets, and the lambda function.
+
+1. Find the ROS commands used to perform the functionality you want. This can require using multiple commands such as rostopic list, rosservice list, etc.
+2. Figure out the proper format for these commands. This can require using rosservice info and other commands.
+3. Convert the ROS commands to websocket format. Look at the payload_dictionary as an example - the "sit" command is really a "rosservice call /puppy_control/runActionGroup/sit.d6ac" command. Many functionalities require multiple commands, such as calling set_running or /enter or /exit.
+4. Add the command words to the lambda function
+5. Troubleshoot usage in controller.py - many specialized functionalities require additional changes to the controller code.
+
 Additional Notes and Troubleshooting
 ====================================
 
