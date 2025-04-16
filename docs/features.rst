@@ -64,6 +64,10 @@ Technical Features
      - When prompting the robot again while its executing commands it will stop its current command and delete all future commands
    * - Speaker functionality
      - Plays a barking sound to alert user that the robot is listening
+   * - Multilingual
+     - Able to understand commands in most languages, including Google Translated commands
+   * - Command generation
+     - Ability to perform non-existing commands if the functionality could be created by a chain of current commands, such as "walk in a square" (walking and turning)
 
 
 
@@ -82,3 +86,4 @@ Future Features
 - More advanced computer vision techniques, allowing PuppyPi to dynamically interact with its environment
 - Ability to run python programs on PuppyPi instead of individual ROS commands one by one
 - Final app functionalities - color tracking, apriltag recognition, and lidar
+- Advanced command generation - ability to extrapolate and move PuppyPi creatively
