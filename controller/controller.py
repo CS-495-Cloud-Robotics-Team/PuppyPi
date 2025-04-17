@@ -19,6 +19,8 @@ import io
 task_done_event = threading.Event()
 stop_event = threading.Event()
 
+ws = None
+
 # Localhost, connection to port 9090 on itself
 PUPPYPI_IP = "localhost"
 # WebSocket URL (rosbridge default is ws://<PuppyPi-IP>:9090)
@@ -62,7 +64,7 @@ def websocket_handler():
     """Maintains a persistent WebSocket connection and processes commands from the queue."""
     def on_open(ws):
         print("WebSocket connected")
-
+    global ws
     ws = websocket.WebSocketApp(
         WEBSOCKET_URL,
         on_message=on_message,
@@ -87,12 +89,13 @@ def websocket_handler():
                 # Check if the command has a "wait" key
                 if isinstance(command, dict) and "wait" in command:
                     if command["wait"] == "{{walk_time}}":
-                        d = command_queue.queue
+                        d = command_queue
                         walk_time = 2.5
-                        if isinstance(d[0], float) or isinstance(d[0], int):
+                        if not d.empty() and (isinstance(d[0], float) or isinstance(d[0], int)):
                             walk_time = command_queue.get()
                             print(f"walk time is {walk_time}")
                         command["wait"] = walk_time
+                        # print(f"this is commandwait f{command["wait"]} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
                     wait_time = command["wait"]
                     print(f"Waiting for {wait_time} seconds...")
                     stop_event.clear()
@@ -178,14 +181,21 @@ def record():
 
     return processed_audio_buffer
 
+def stop_everything():
+    ws.send(json.dumps(payloads_dict.get("stop-face-detect")))
+    ws.send(json.dumps(payloads_dict.get("stop-visual-patrol")))
+    ws.send(json.dumps(payloads_dict.get("stop-visual-patrol")))
+    ws.send(json.dumps(payloads_dict.get("stop-color-detect")))
+    # print(f"this is stop color detect function              {payloads_dict.get("stop-color-detect")}")
+    print("stopping everything !!!!!!!!!!!!!!!!!!!!!!!!!!!")
+
 def record_and_process():
     print("Wake word detected!")
     
     stop_event.set()
+    stop_everything()
     print("full stopping!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     if not (command_queue.empty()):
-        # stop_event.set()
-        # print("full stopping!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         while not command_queue.empty():
             command_queue.get()
             
