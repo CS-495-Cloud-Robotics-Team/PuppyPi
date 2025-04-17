@@ -168,7 +168,7 @@ def interpret_audio(transcription_text):
 
     try:
         response = openai.ChatCompletion.create(
-            model="gpt-4.1-nano",
+            model="gpt-4-turbo",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": transcription_text}
