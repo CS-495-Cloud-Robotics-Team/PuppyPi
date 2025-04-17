@@ -43,12 +43,15 @@ def get_commands():
         # "up-stairs-3.5cm-alt1",
         "walk",
         "walk-backward",
-        "wave"
-        "face-detect"
-        "black-line-following"
-        "red-line-following"
-        "color-detect"
-        "apriltag-detect"
+        "wave",
+        "face-detect",
+        "black-line-following",
+        "red-line-following",
+        "color-detect",
+        "apriltag-detect",
+        "lidar-avoidance",
+        "lidar-tracking",
+        "lidar-guarding"
     ]
 
 def get_secret():
