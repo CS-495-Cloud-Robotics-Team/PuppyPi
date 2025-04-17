@@ -540,7 +540,7 @@ payloads_dict = {
         }
       }
     ],
-    "line-following": [
+    "black-line-following": [
       {
         "op": "call_service",
         "service": "/visual_patrol/set_running",
@@ -557,6 +557,26 @@ payloads_dict = {
         "service": "/visual_patrol/set_target",
         "args": {
           "data": "black"
+        }
+      }
+    ],
+    "red-line-following": [
+      {
+        "op": "call_service",
+        "service": "/visual_patrol/set_running",
+        "args": {
+          "data": True
+        }
+      },
+      {
+        "op": "call_service",
+        "service": "/visual_patrol/enter"
+      },
+      {
+        "op": "call_service",
+        "service": "/visual_patrol/set_target",
+        "args": {
+          "data": "red"
         }
       }
     ],
