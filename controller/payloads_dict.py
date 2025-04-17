@@ -526,5 +526,51 @@ payloads_dict = {
                 "wait": True
             }
         }
-    ]     
+    ],  
+    "face-detect": [
+      {
+        "op": "call_service",
+        "service": "/face_detect/enter"
+      },
+      {
+        "op": "call_service",
+        "service": "/face_detect/set_running",
+        "args": {
+          "data": True
+        }
+      }
+    ],
+    "line-following": [
+      {
+        "op": "call_service",
+        "service": "/visual_patrol/set_running",
+        "args": {
+          "data": True
+        }
+      },
+      {
+        "op": "call_service",
+        "service": "/visual_patrol/enter"
+      },
+      {
+        "op": "call_service",
+        "service": "/visual_patrol/set_target",
+        "args": {
+          "data": "black"
+        }
+      }
+    ],
+    "color-detect": [
+      {
+        "op": "call_service",
+        "service": "/color_detect/enter"
+      },
+      {
+        "op": "call_service",
+        "service": "/color_detect/set_running",
+        "args": {
+          "data": True
+        }
+      }
+    ]
 }
