@@ -498,7 +498,6 @@ payloads_dict = {
                 "angular": {"x": 0.0, "y": 0.0, "z": 0.0}
             }
         }
-        
     ],
 
     "dance_routine": [
@@ -528,37 +527,65 @@ payloads_dict = {
         }
     ],  
     "face-detect": [
-      {
-        "op": "call_service",
-        "service": "/face_detect/enter"
-      },
-      {
-        "op": "call_service",
-        "service": "/face_detect/set_running",
-        "args": {
-          "data": True
+        {
+            "op": "call_service",
+            "service": "/face_detect/enter"
+        },
+        {
+            "op": "call_service",
+            "service": "/face_detect/set_running",
+            "args": {
+            "data": True
+            }
+        },
+        {
+            "wait": 10.0
+        },
+        {
+            "op": "call_service",
+            "service": "/face_detect/set_running",
+            "args": {
+                "data": False
+            }
+        },
+        {
+            "op": "call_service",
+            "service": "/face_detect/exit"
         }
-      }
     ],
     "black-line-following": [
-      {
-        "op": "call_service",
-        "service": "/visual_patrol/set_running",
-        "args": {
-          "data": True
+        {
+            "op": "call_service",
+            "service": "/visual_patrol/set_running",
+            "args": {
+            "data": True
+            }
+        },
+        {
+            "op": "call_service",
+            "service": "/visual_patrol/enter"
+        },
+        {
+            "op": "call_service",
+            "service": "/visual_patrol/set_target",
+            "args": {
+            "data": "black"
+            }
+        },
+        {
+            "wait": 10.0
+        },
+        {
+            "op": "call_service",
+            "service": "/visual_patrol/set_running",
+            "args": {
+                "data": False
+            }
+        },
+        {
+            "op": "call_service",
+            "service": "/visual_patrol/exit"
         }
-      },
-      {
-        "op": "call_service",
-        "service": "/visual_patrol/enter"
-      },
-      {
-        "op": "call_service",
-        "service": "/visual_patrol/set_target",
-        "args": {
-          "data": "black"
-        }
-      }
     ],
     "red-line-following": [
       {
@@ -578,7 +605,21 @@ payloads_dict = {
         "args": {
           "data": "red"
         }
-      }
+      },
+              {
+            "wait": 10.0
+        },
+        {
+            "op": "call_service",
+            "service": "/visual_patrol/set_running",
+            "args": {
+                "data": False
+            }
+        },
+        {
+            "op": "call_service",
+            "service": "/visual_patrol/exit"
+        }
     ],
     "color-detect": [
       {
@@ -591,7 +632,21 @@ payloads_dict = {
         "args": {
           "data": True
         }
-      }
+      },
+        {
+            "wait": 10.0
+        },
+        {
+            "op": "call_service",
+            "service": "/color_detect/set_running",
+            "args": {
+                "data": False
+            }
+        },
+        {
+            "op": "call_service",
+            "service": "/color_detect/exit"
+        }
     ],
     "apriltag-detect": [
       {
@@ -604,7 +659,21 @@ payloads_dict = {
         "args": {
           "data": True
         }
-      }
+      },
+        {
+            "wait": 10.0
+        },
+        {
+            "op": "call_service",
+            "service": "/apriltag_detect/set_running",
+            "args": {
+                "data": False
+            }
+        },
+        {
+            "op": "call_service",
+            "service": "/apriltag_detect/exit"
+        }
     ],
     "lidar-avoidance": [
       {
@@ -617,7 +686,17 @@ payloads_dict = {
         "args": {
           "data": 1
         }
-      }
+      },
+        {
+            "wait": 10.0
+        },
+        {
+            "op": "call_service",
+            "service": "/lidar_app/set_running",
+            "args": {
+                "data": 0
+            }
+        }
     ],
     "lidar-tracking": [
       {
@@ -630,7 +709,17 @@ payloads_dict = {
         "args": {
           "data": 2
         }
-      }
+      },
+              {
+            "wait": 10.0
+        },
+        {
+            "op": "call_service",
+            "service": "/lidar_app/set_running",
+            "args": {
+                "data": 0
+            }
+        }
     ],
     "lidar-guarding": [
       {
@@ -643,6 +732,16 @@ payloads_dict = {
         "args": {
           "data": 3
         }
-      }
+      },
+              {
+            "wait": 10.0
+        },
+        {
+            "op": "call_service",
+            "service": "/lidar_app/set_running",
+            "args": {
+                "data": 0
+            }
+        }
     ]
 }
