@@ -55,9 +55,9 @@ Technical Features
    * - Payload dictionary
      - A list of payloads connected via command_queue words (ex. "walk") that tell ROS what to execute on the PuppyPi motors
    * - AI prompt
-     - 
+     - A long string inside the lambda function that prompts gpt for a set of commands based on the user's phrase (first turned audio into text for prompt). This can be changed for specific edge cases with additional prompting.
    * - Text transcription
-     - 
+     - Uses OpenAI Wisper to convert the user's spoken phrase into text for the AI prompt, works in many different languages.
    * - Continuous Command Duration Control
      - When asking the robot to do a continuous command such as "walk", request a number of seconds for the program to run for
    * - Automatic Stopping
