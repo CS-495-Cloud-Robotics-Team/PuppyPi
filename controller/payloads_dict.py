@@ -592,5 +592,18 @@ payloads_dict = {
           "data": True
         }
       }
+    ],
+    "apriltag-detect": [
+      {
+        "op": "call_service",
+        "service": "/apriltag_detect/enter"
+      },
+      {
+        "op": "call_service",
+        "service": "/apriltag_detect/set_running",
+        "args": {
+          "data": True
+        }
+      }
     ]
 }
