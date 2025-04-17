@@ -137,7 +137,7 @@ def lambda_handler(event, context):
 
 def interpret_audio(transcription_text):
     
-    #Send a prompt to OpenAI's GPT-3.5-TURBO and return the response.
+    #Send a prompt to OpenAI's GPT-4.1-Nano and return the response.
     system_prompt = f"""
     You are an AI that translates spoken commands into a chronological sequence of predefined commands for a robotic quadruped.
     The valid commands are: {", ".join(get_commands())}.
@@ -159,7 +159,7 @@ def interpret_audio(transcription_text):
       Output: `["bow", "shake-hands", "wave"]`
       
     - Input: "Walk for 5 seconds, then do the moonwalk"
-      Output: `["walk", 5, "moonwalk"]`
+      Output: `["walk", 5, "moonwalk"]
 
     - Input: "Do a backflip" (not a valid command)
       Output: `["error"]`
@@ -168,7 +168,7 @@ def interpret_audio(transcription_text):
 
     try:
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4.1-nano",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": transcription_text}
