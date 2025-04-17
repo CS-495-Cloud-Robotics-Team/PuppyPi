@@ -48,6 +48,7 @@ def get_commands():
         "black-line-following"
         "red-line-following"
         "color-detect"
+        "apriltag-detect"
     ]
 
 def get_secret():
