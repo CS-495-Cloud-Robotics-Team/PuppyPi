@@ -605,5 +605,44 @@ payloads_dict = {
           "data": True
         }
       }
+    ],
+    "lidar-avoidance": [
+      {
+        "op": "call_service",
+        "service": "/lidar_app/enter"
+      },
+      {
+        "op": "call_service",
+        "service": "/lidar_app/set_running",
+        "args": {
+          "data": 1
+        }
+      }
+    ],
+    "lidar-tracking": [
+      {
+        "op": "call_service",
+        "service": "/lidar_app/enter"
+      },
+      {
+        "op": "call_service",
+        "service": "/lidar_app/set_running",
+        "args": {
+          "data": 2
+        }
+      }
+    ],
+    "lidar-guarding": [
+      {
+        "op": "call_service",
+        "service": "/lidar_app/enter"
+      },
+      {
+        "op": "call_service",
+        "service": "/lidar_app/set_running",
+        "args": {
+          "data": 3
+        }
+      }
     ]
 }
