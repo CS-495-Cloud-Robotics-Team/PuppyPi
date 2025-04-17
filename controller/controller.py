@@ -91,7 +91,7 @@ def websocket_handler():
                     if command["wait"] == "{{walk_time}}":
                         d = command_queue
                         walk_time = 2.5
-                        if not d.empty() and (isinstance(d[0], float) or isinstance(d[0], int)):
+                        if not d.empty() and (isinstance(d.queue[0], float) or isinstance(d.queue[0], int)):
                             walk_time = command_queue.get()
                             print(f"walk time is {walk_time}")
                         command["wait"] = walk_time
