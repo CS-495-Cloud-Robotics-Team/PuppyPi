@@ -159,10 +159,16 @@ def interpret_audio(transcription_text):
       Output: `["bow", "shake-hands", "wave"]`
       
     - Input: "Walk for 5 seconds, then do the moonwalk"
-      Output: `["walk", 5, "moonwalk"]
+      Output: `["walk", 5, "moonwalk"]`
 
     - Input: "Do a backflip" (not a valid command)
       Output: `["error"]`
+
+    - Input: "Walk"
+      Output: `["walk"]`
+
+    - Input: "Sit"
+      Output: `["sit"]`
 
     """
 
