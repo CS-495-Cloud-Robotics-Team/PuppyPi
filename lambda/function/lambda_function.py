@@ -45,7 +45,8 @@ def get_commands():
         "walk-backward",
         "wave"
         "face-detect"
-        "line-following"
+        "black-line-following"
+        "red-line-following"
         "color-detect"
     ]
 
