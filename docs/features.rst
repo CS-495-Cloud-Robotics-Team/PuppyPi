@@ -93,5 +93,6 @@ Future Features
 - Utilizing the arm that comes with the PuppyPi to pick up and grab objects
 - More advanced computer vision techniques, allowing PuppyPi to dynamically interact with its environment
 - Ability to run python programs on PuppyPi instead of individual ROS commands one by one
-- Final app functionalities - color tracking, apriltag recognition, and lidar
+- Final app functionalities - color tracking
 - Advanced command generation - ability to extrapolate and move PuppyPi creatively
+- Allowing face detection, line following, color detection, & lidar to be interrupted with a call to the wake word
