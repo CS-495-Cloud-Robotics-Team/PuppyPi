@@ -103,9 +103,9 @@ This can be done through the use of ROS, websockets, and the lambda function.
 
 6. What is all the stuff in the VNC Viewer?
 -------------------------------------------
-Terminator - used for running ROS1 commands, and is inside the docker
-Terminal - used for running python programs, outside the docker
-Lab Tool - camera viewing
+- Terminator - used for running ROS1 commands, and is inside the docker
+- Terminal - used for running python programs, outside the docker
+- Lab Tool - camera viewing
 
 For more info & details on the app and other functionalities make sure to check out the HiWonder PuppyPi documentation: https://docs.hiwonder.com/projects/PuppyPi/en/latest/
 
