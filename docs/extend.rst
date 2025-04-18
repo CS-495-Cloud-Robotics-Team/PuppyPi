@@ -112,6 +112,7 @@ Project issues and enhancement requests are tracked on GitHub:
 - Getting overwhelmed by multiple requests or poor network connectivity
 - Low-quality microphones resulting in poor performance and inability to perform certain commands
 - Horrific battery life
+- More testing on Face Detection, Line Following, Lidar, & Color Detection is needed - specifically, making sure the exit scripts are run and seeing if they can be interrupted.
 
 Code Style Guidelines
 ---------------------
