@@ -87,13 +87,39 @@ List of Current Voice-Executable Commands
    * - Action
      - Description
      - Type
-     - Parameters
+     - Parameters/Notes
      - Sample Command
    * - Two leg stand
      - Make the PuppyPi stand on its two back legs
      - Rosservice, action group
      - N/A
      - "PuppyPi, can you stand on two legs?"
+   * - Bow
+     - Make the PuppyPi do a bowing motion by lowering its head
+     - Rosservice, action group
+     - N/A
+     - "PuppyPi, can you bow?"
+   * - Boxing
+     - Make the PuppyPi stand on its hind legs and punch with its front legs
+     - Rosservice, action group
+     - N/A, boxing-main and boxing-alt do the same thing
+     - "PuppyPi, do a boxing punch"
+   * - Grab
+     - Make the PuppyPi grab the object in front of it with its detachable arm
+     - Rosservice, action group
+     - N/A, untested functionality, for grabber arm only
+     - "PuppyPi, grab with your arm"
+   * - Jump
+     - Make the PuppyPi "jump"
+     - Rosservice, action group
+     - N/A, does not jump high at all
+     - "PuppyPi, jump for me"
+   * - Kick ball
+     - Make the PuppyPi kick forward with its front feet
+     - Rosservice, action group
+     - Kick-ball-left or kick-ball-right, do not know what kick-ball-left-bak does
+     - "PuppyPi, can you kick with your left/right foot"
+
 
 Future Features
 ---------------
