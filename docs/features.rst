@@ -77,7 +77,23 @@ Technical Features
    * - Visual Patrol/Line following
      - When this command is run the robot will follow a line of a specific color
 
+List of Current Voice-Executable Commands
+-----------------------------------------
 
+.. list-table:: 
+   :header-rows: 1
+   :widths: 20 20 20 20 20
+
+   * - Action
+     - Description
+     - Type
+     - Parameters
+     - Sample Command
+   * - Two leg stand
+     - Make the PuppyPi stand on its two back legs
+     - Rosservice, action group
+     - N/A
+     - "PuppyPi, can you stand on two legs?"
 
 Future Features
 ---------------
