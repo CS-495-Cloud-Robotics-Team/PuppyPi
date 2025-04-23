@@ -186,9 +186,64 @@ List of Current Voice-Executable Commands
      - "PuppyPi, please stretch out"
    * - Turn around
      - Make the PuppyPi turn 180 degrees around
-     - Rostopic publish to /cmd_vel geometry_msgs/Twist, alters the angular velocity
+     - Rostopic publish to /cmd_vel geometry_msgs/Twist, alters the angular velocity of z
      - N/A
      - "PuppyPi, turn around"
+   * - Turn left
+     - Make the PuppyPi execute a 90 degree turn left
+     - Rostopic publish to /cmd_vel geometry_msgs/Twist, alters the angular velocity of z
+     - N/A
+     - "PuppyPi, turn left"
+   * - Turn right
+     - Make the PuppyPi execute a 90 degree turn right
+     - Rostopic publish to /cmd_vel geometry_msgs/Twist, alters the angular velocity of z
+     - N/A
+     - "PuppyPi, turn right"
+   * - Up stairs
+     - Make the PuppyPi attempt to go up raised blocks in a stair step format
+     - Rosservice, action group
+     - There are many different versions of this and all of them work very poorly - PuppyPi likely to fall over
+     - "PuppyPi, go up some stairs"
+   * - Wave
+     - Make the PuppyPi do a body wave
+     - Rosservice, action group
+     - N/A
+     - "PuppyPi, do the wave"
+   * - Walk
+     - Make the PuppyPi walk forward
+     - Rostopic publish to /cmd_vel geometry_msgs/Twist, alters the linear velocity of x
+     - Can be customized with a length of time such as "walk forward for 5 seconds" otherwise defaults to 2.5 seconds
+     - "PuppyPi, walk forward"
+   * - Walk backwards
+     - Make the PuppyPi walk backwards
+     - Rostopic publish to /cmd_vel geometry_msgs/Twist, alters the linear velocity of x (negative direction)
+     - Can be customized with a length of time such as "walk forward for 5 seconds" otherwise defaults to 2.5 seconds
+     - "PuppyPi, walk backwards"
+   * - Face detection
+     - Make the PuppyPi attempt to detect a face using front camera. When it does it will perform the "shake hands" action
+     - Rosservice, not an action group
+     - N/A, we have it working for 10 second increments and then the stop command is automatically sent. If the stop command is not sent it will perform indefinitely
+     - "PuppyPi, find my face"
+   * - Line following
+     - Make the PuppyPi attempt to follow a line on the ground
+     - Rosservice, not an action group
+     - Will follow black or red lines. We have it working for 10 second increments and then the stop command is automatically sent. If the stop command is not sent it will perform indefinitely
+     - "PuppyPi, follow the black/red line"
+   * - Color detection
+     - Make the PuppyPi detect colors - LED changes for blue, green, and red. Theoretically other colors can be created in the Lab Tool we just never got there.
+     - Rosservice, not an action group
+     - Nods head for red, shakes head for others. We have it working for 10 second increments and then the stop command is automatically sent. If the stop command is not sent it will perform indefinitely
+     - "PuppyPi, perform color detection"
+   * - Apriltag detection
+     - Make the PuppyPi detect apriltags and perform the action it is told. Can only detect tags 1,2,3 from tag36h11 group - not sure if there are more but these are all that worked for us.
+     - Rosservice, not an action group
+     - N/A, We have it working for 10 second increments and then the stop command is automatically sent. If the stop command is not sent it will perform indefinitely
+     - "PuppyPi, detect some apriltags"
+   * - Lidar
+     - Make the PuppyPi use the lidar for various features sensing its environment. Requires Lidar to be attached to the PuppyPi.
+     - Rosservice, not an action group
+     - 3 modes - obstacle avoidance, tracking, guarding. We have it working for 10 second increments and then the stop command is automatically sent. If the stop command is not sent it will perform indefinitely
+     - "PuppyPi, do lidar avoidance/tracking/guarding"
 
 
 Future Features
