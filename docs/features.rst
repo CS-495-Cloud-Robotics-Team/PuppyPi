@@ -119,6 +119,41 @@ List of Current Voice-Executable Commands
      - Rosservice, action group
      - Kick-ball-left or kick-ball-right, do not know what kick-ball-left-bak does
      - "PuppyPi, can you kick with your left/right foot"
+   * - Lie down
+     - Make the PuppyPi lie down
+     - Rosservice, action group
+     - N/A
+     - "PuppyPi, can you lie down?"
+   * - Look down
+     - Make the PuppyPi look down
+     - Rosservice, action group
+     - look-down-short doesn't seem to do anything different
+     - "PuppyPi, can you look down?"
+   * - Moonwalk
+     - Make the PuppyPi do the moonwalk - 4 sets of leg movements
+     - Rosservice, action group
+     - N/A
+     - "PuppyPi, can you do the moonwalk?"
+   * - Nod
+     - Make the PuppyPi nod its head up and down
+     - Rosservice, action group
+     - N/A
+     - "PuppyPi, can you nod your head?"
+   * - Pee
+     - Make the PuppyPi do a peeing motion
+     - Rosservice, action group
+     - N/A
+     - "PuppyPi, can you pee on the floor?"
+   * - Push-up
+     - Make the PuppyPi do 2 push ups
+     - Rosservice, action group
+     - N/A
+     - "PuppyPi, can you do some push ups?"
+   * - Run
+     - Make the PuppyPi run - version of the "walk" command with faster linear x velocity
+     - Rostopic publish to /cmd_vel geometry_msgs/Twist
+     - N/A
+     - "PuppyPi, can you run?"
 
 
 Future Features
