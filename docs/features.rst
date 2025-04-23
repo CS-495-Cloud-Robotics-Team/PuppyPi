@@ -154,6 +154,41 @@ List of Current Voice-Executable Commands
      - Rostopic publish to /cmd_vel geometry_msgs/Twist
      - N/A
      - "PuppyPi, can you run?"
+   * - Shake hands
+     - Make the PuppyPi lift its front foot up and "shake"
+     - Rosservice, action group
+     - N/A
+     - "PuppyPi, can you shake my hand?"
+   * - Shake head
+     - Make the PuppyPi shake its head side to side
+     - Rosservice, action group
+     - N/A, if there is servo deviation this can make the PuppyPi tip over
+     - "PuppyPi, shake your head no"
+   * - Shake head
+     - Make the PuppyPi sit
+     - Rosservice, action group
+     - N/A
+     - "PuppyPi, sit down for me"
+   * - Spacewalk
+     - Make the PuppyPi "spacewalk" - a smoother version of moonwalk
+     - Rosservice, action group
+     - N/A
+     - "PuppyPi, please spacewalk"
+   * - Stand
+     - Make the PuppyPi stand up on 4 legs
+     - Rosservice, action group
+     - N/A, has "stand with arm" and "stand short" not sure what they do if they do anything at all
+     - "PuppyPi, stand up"
+   * - Stretch
+     - Make the PuppyPi "stretch" by leaning forward
+     - Rosservice, action group
+     - N/A
+     - "PuppyPi, please stretch out"
+   * - Turn around
+     - Make the PuppyPi turn 180 degrees around
+     - Rostopic publish to /cmd_vel geometry_msgs/Twist, alters the angular velocity
+     - N/A
+     - "PuppyPi, turn around"
 
 
 Future Features
