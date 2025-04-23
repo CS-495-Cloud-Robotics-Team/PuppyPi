@@ -68,10 +68,17 @@ Adding New Functionality
 - **New ROS Payloads**:
   - Edit `payloads_dict.py` in the `controller` directory.
   - Add a new key-value pair that maps a cloud response to an action.
+  - To figure out the command you need: 
+
+1. Find the ROS commands used to perform the functionality you want. This can require using multiple commands such as rostopic list, rosservice list, etc. We used VNC Viewer to check if the ROS commands worked - make sure you are using the Terminator (ROS1) and not the Terminal.
+2. Figure out the proper format for these commands. This can require using rosservice info and other commands.
+3. Convert the ROS commands to websocket format. Look at the payload_dictionary as an example - the "sit" command is really a "rosservice call /puppy_control/runActionGroup/sit.d6ac" command. Many functionalities require multiple commands, such as calling set_running or /enter or /exit.
+
 
 - **Cloud Command Mapping**:
   - Located in the Lambda function (`lambda/function/commands.py`).
   - Ensure cloud-side updates match the expected payloads on the PuppyPi.
+  - Troubleshoot usage in controller.py - many specialized functionalities require additional changes to the controller code.
 
 Testing and Validation
 ----------------------
