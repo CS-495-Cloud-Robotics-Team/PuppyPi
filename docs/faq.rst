@@ -90,17 +90,6 @@ To increase the timeout:
 
 Be aware that longer audio files take longer to upload to the cloud and process.
 
-5. How do I create new commands and make the PuppyPi perform them?
-------------------------------------------------------------------
-
-This can be done through the use of ROS, websockets, and the lambda function.
-
-1. Find the ROS commands used to perform the functionality you want. This can require using multiple commands such as rostopic list, rosservice list, etc. We used VNC Viewer to check if the ROS commands worked - make sure you are using the Terminator (ROS1) and not the Terminal.
-2. Figure out the proper format for these commands. This can require using rosservice info and other commands.
-3. Convert the ROS commands to websocket format. Look at the payload_dictionary as an example - the "sit" command is really a "rosservice call /puppy_control/runActionGroup/sit.d6ac" command. Many functionalities require multiple commands, such as calling set_running or /enter or /exit.
-4. Add the command words to the lambda function
-5. Troubleshoot usage in controller.py - many specialized functionalities require additional changes to the controller code.
-
 5. What are some examples of ROS commands?
 ------------------------------------------
 Any Action Group: rosservice call /puppy_control/runActionGroup/[insert action group filename].d6ac
@@ -117,7 +106,7 @@ rostopic pub /cmd_vel geometry_msgs/Twist "{ linear: { x: 0.0, y: 0.0, z: 0.0 },
 
 rosservice call /puppy_control/set_running False
 
-7. What is all the stuff in the VNC Viewer?
+6. What is all the stuff in the VNC Viewer?
 -------------------------------------------
 - Terminator - used for running ROS1 commands, and is inside the docker
 - Terminal - used for running python programs, outside the docker
