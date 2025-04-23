@@ -101,7 +101,17 @@ This can be done through the use of ROS, websockets, and the lambda function.
 4. Add the command words to the lambda function
 5. Troubleshoot usage in controller.py - many specialized functionalities require additional changes to the controller code.
 
-6. What is all the stuff in the VNC Viewer?
+5. What are some examples of ROS commands?
+------------------------------------------
+Any Action Group: rosservice call /puppy_control/runActionGroup/[insert action group filename].d6ac
+
+Start Walking: rosservice call /puppy_control/set_running True
+rostopic pub /cmd_vel geometry_msgs/Twist "{ linear: { x: 1.0, y: 0.0, z: 0.0 }, angular: { x: 0.0, y: 0.0, z: 0.0 } }"
+
+Stop Walking: rostopic pub /cmd_vel geometry_msgs/Twist "{ linear: { x: 0.0, y: 0.0, z: 0.0 }, angular: { x: 0.0, y: 0.0, z: 0.0 } }"
+rosservice call /puppy_control/set_running False
+
+7. What is all the stuff in the VNC Viewer?
 -------------------------------------------
 - Terminator - used for running ROS1 commands, and is inside the docker
 - Terminal - used for running python programs, outside the docker
