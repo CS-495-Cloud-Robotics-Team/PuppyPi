@@ -105,11 +105,13 @@ This can be done through the use of ROS, websockets, and the lambda function.
 ------------------------------------------
 Any Action Group: rosservice call /puppy_control/runActionGroup/[insert action group filename].d6ac
 
-Start Walking: rosservice call /puppy_control/set_running True
-rostopic pub /cmd_vel geometry_msgs/Twist "{ linear: { x: 1.0, y: 0.0, z: 0.0 }, angular: { x: 0.0, y: 0.0, z: 0.0 } }"
+Start Walking: 
+- rosservice call /puppy_control/set_running True
+- rostopic pub /cmd_vel geometry_msgs/Twist "{ linear: { x: 1.0, y: 0.0, z: 0.0 }, angular: { x: 0.0, y: 0.0, z: 0.0 } }"
 
-Stop Walking: rostopic pub /cmd_vel geometry_msgs/Twist "{ linear: { x: 0.0, y: 0.0, z: 0.0 }, angular: { x: 0.0, y: 0.0, z: 0.0 } }"
-rosservice call /puppy_control/set_running False
+Stop Walking: 
+- rostopic pub /cmd_vel geometry_msgs/Twist "{ linear: { x: 0.0, y: 0.0, z: 0.0 }, angular: { x: 0.0, y: 0.0, z: 0.0 } }"
+- rosservice call /puppy_control/set_running False
 
 7. What is all the stuff in the VNC Viewer?
 -------------------------------------------
