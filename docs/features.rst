@@ -33,7 +33,7 @@ Technical Features
    * - On-startup running
      - When the robot is turned on, it automatically runs controller.py (you can turn this off)
    * - Automatic github download
-     - When the robot is turned, on it automatically pulls from the github with updated code
+     - When the robot is turned on it automatically pulls from the github with updated code
    * - Network interoperability
      - The robot can connect to various networks by going into the Raspberry Pi and connecting to the specific network via the terminal
    * - PyAudio recording
@@ -43,7 +43,7 @@ Technical Features
    * - Audio compression
      - Uses audio compression techniques to speed up sending audio files to the cloud
    * - Silence/time based spoken command detection
-     - After the robot hears silence for 1.5 seconds it will assume the user has finished saying the command. After 10 seconds, it hard stops to ensure backround noise doesn't make it record forever
+     - After the robot hears silence for 1.5 seconds it will assume the user has finished saying the command. After 10 seconds, it hard stops to ensure background noise doesn't make it record forever
    * - Wake Word Detection
      - Uses picovoice python library to create a wake word (default = 'PuppyPi', can be edited by user) that detects when the word is said to initalize the prompting
    * - Bluetooth mic
@@ -55,7 +55,7 @@ Technical Features
    * - Payload dictionary
      - A list of payloads connected via command_queue words (ex. "walk") that tell ROS what to execute on the PuppyPi motors
    * - Text transcription
-     - Uses OpenAI Wisper to convert the user's spoken phrase into text for the AI prompt, works in many different languages.
+     - Uses OpenAI Whisper to convert the user's spoken phrase into text for the AI prompt.
    * - AI prompt
      - A long string inside the lambda function that prompts gpt for a set of commands based on the user's phrase (first turned audio into text for prompt). This can be changed for specific edge cases with additional prompting.
    * - Continuous Command Duration Control
@@ -68,14 +68,12 @@ Technical Features
      - Able to understand commands in most languages, including Google Translated commands
    * - Command generation
      - Ability to perform non-existing commands if the functionality could be created by a chain of current commands, such as "walk in a square" (walking and turning)
-   * - Variable time commands
-     - Specifically for walk the user can ask for a number of seconds it should walk for, will be input into the command_queue and interpreted by the code in controller.py
    * - Face Detection
      - When this command is run the robot will wave its paw when it detects a face
    * - Color Detection
-     - When this command is run the robot will nod its head when a specific color is found
+     - When this command is run the robot will nod its head when a specific color is found (currently blue, red, green)
    * - Visual Patrol/Line following
-     - When this command is run the robot will follow a line of a specific color
+     - When this command is run the robot will follow a line of a specific color (black, red)
 
 List of Current Voice-Executable Commands
 -----------------------------------------
