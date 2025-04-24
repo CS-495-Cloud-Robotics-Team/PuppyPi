@@ -191,7 +191,7 @@ def record_and_process():
 
     headers = {
         'Content-Type': 'audio/wav',
-        'x-api-key': os.getenv("COMMAND_API_KEY"),
+        'x-api-key': os.getenv("AWS_API_KEY"),
     }
     
     data = audio_buffer.read()
