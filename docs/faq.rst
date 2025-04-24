@@ -146,7 +146,7 @@ To update API keys:
 2. Update the following:
 
    - `PICO_ACCESS_KEY`: Picovoice API key
-   - `COMMAND_API_KEY`: AWS Lambda key
+   - `AWS_API_KEY`: AWS Lambda key
 
 3. Save the file and restart the Raspberry Pi:
 
