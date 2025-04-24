@@ -89,7 +89,7 @@ def websocket_handler():
                     stop_event.clear()
                     was_stopped = stop_event.wait(timeout=command["wait_time"]) #this is for possible interupt when wakeword is said again
                 elif "variable_time" in command:
-                    print(f"waiting for time f{command["variable_time"]}")
+                    # print(f"waiting for time f{command["variable_time"]}")
                     variable_time = command["variable_time"]
                     d = command_queue #creates a seperate version for queue to peek next variable (I don't actually know how queues work lol so change if needed)
                     if not d.empty() and (isinstance(d.queue[0], float) or isinstance(d.queue[0], int)): #if next is integer i.e. for walk pop it and change variable_time
