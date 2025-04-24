@@ -79,48 +79,27 @@ def websocket_handler():
 
     while True:
         payload = command_queue.get()  # Wait for a command
-        print(f"payload is {payload}")
-        
         if isinstance(payload, list):  # Check if it's a list of commands
+            # each command is either a "wait" (wait_time, variable_time, etc.) or a full websocket command
             for command in payload:
-                if command["wait_time"].exist():
+                print(command)
+                #check if its a "wait" type command or websocket command
+                if "wait_time" in command:
+                    print(f"waiting for time f{command["wait_time"]}")
                     stop_event.clear()
-                    was_stopped = stop_event.wait(timeout=command["wait_time"])
-                elif command["variable_time"].exist():
+                    was_stopped = stop_event.wait(timeout=command["wait_time"]) #this is for possible interupt when wakeword is said again
+                elif "variable_time" in command:
+                    print(f"waiting for time f{command["variable_time"]}")
                     variable_time = command["variable_time"]
-                    d = command_queue
-                    if not d.empty() and (isinstance(d.queue[0], float) or isinstance(d.queue[0], int)):
+                    d = command_queue #creates a seperate version for queue to peek next variable (I don't actually know how queues work lol so change if needed)
+                    if not d.empty() and (isinstance(d.queue[0], float) or isinstance(d.queue[0], int)): #if next is integer i.e. for walk pop it and change variable_time
                         variable_time = command_queue.get()
                     stop_event.clear()
                     was_stopped = stop_event.wait(timeout=variable_time)
-                else:
+                else: #websocket command, execute it then wait for message recieved to continue
                     ws.send(json.dumps(command))
                     task_done_event.wait()
                     task_done_event.clear()
-                
-            #     print(f"Sent command: {command}")
-            #     # Check if the command has a "wait" key
-            #     if isinstance(command, dict) and "wait" in command:
-            #         if command["variable_wait"].exist():
-            #             d = command_queue
-            #             walk_time = 2.5
-            #             if not d.empty() and (isinstance(d.queue[0], float) or isinstance(d.queue[0], int)):
-            #                 walk_time = command_queue.get()
-            #                 print(f"walk time is {walk_time}")
-            #             command["wait"] = walk_time
-            #             # print(f"this is commandwait f{command["wait"]} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
-            #         wait_time = command["wait"]
-            #         print(f"Waiting for {wait_time} seconds...")
-            #         stop_event.clear()
-            #         was_stopped = stop_event.wait(timeout=wait_time)
-            #         if was_stopped:
-            #             print("Sleep was interrupted!")
-            #         else:
-            #             print("Completed full sleep")
-            #     else:
-            #         print("No wait time specified. Proceeding without delay.")
-            # task_done_event.wait()
-            # task_done_event.clear()
         else:
             # Handle single command
             ws.send(json.dumps(payload))
@@ -199,7 +178,7 @@ def record_and_process():
     
     stop_event.set()
     # stop_everything()
-    print("full stopping!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    # print("full stopping!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     if not (command_queue.empty()):
         while not command_queue.empty():
             command_queue.get()
