@@ -76,7 +76,6 @@ def websocket_handler():
     # Run WebSocket in a separate thread
     wst = threading.Thread(target=ws.run_forever, daemon=True)
     wst.start()
-    
 
     while True:
         payload = command_queue.get()  # Wait for a command
@@ -84,30 +83,44 @@ def websocket_handler():
         
         if isinstance(payload, list):  # Check if it's a list of commands
             for command in payload:
-                ws.send(json.dumps(command))
-                print(f"Sent command: {command}")
-                # Check if the command has a "wait" key
-                if isinstance(command, dict) and "wait" in command:
-                    if command["wait"] == "{{walk_time}}":
-                        d = command_queue
-                        walk_time = 2.5
-                        if not d.empty() and (isinstance(d.queue[0], float) or isinstance(d.queue[0], int)):
-                            walk_time = command_queue.get()
-                            print(f"walk time is {walk_time}")
-                        command["wait"] = walk_time
-                        # print(f"this is commandwait f{command["wait"]} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
-                    wait_time = command["wait"]
-                    print(f"Waiting for {wait_time} seconds...")
+                if command["wait_time"].exist():
                     stop_event.clear()
-                    was_stopped = stop_event.wait(timeout=wait_time)
-                    if was_stopped:
-                        print("Sleep was interrupted!")
-                    else:
-                        print("Completed full sleep")
+                    was_stopped = stop_event.wait(timeout=command["wait_time"])
+                elif command["variable_time"].exist():
+                    variable_time = command["variable_time"]
+                    d = command_queue
+                    if not d.empty() and (isinstance(d.queue[0], float) or isinstance(d.queue[0], int)):
+                        variable_time = command_queue.get()
+                    stop_event.clear()
+                    was_stopped = stop_event.wait(timeout=variable_time)
                 else:
-                    print("No wait time specified. Proceeding without delay.")
-            task_done_event.wait()
-            task_done_event.clear()
+                    ws.send(json.dumps(command))
+                    task_done_event.wait()
+                    task_done_event.clear()
+                
+            #     print(f"Sent command: {command}")
+            #     # Check if the command has a "wait" key
+            #     if isinstance(command, dict) and "wait" in command:
+            #         if command["variable_wait"].exist():
+            #             d = command_queue
+            #             walk_time = 2.5
+            #             if not d.empty() and (isinstance(d.queue[0], float) or isinstance(d.queue[0], int)):
+            #                 walk_time = command_queue.get()
+            #                 print(f"walk time is {walk_time}")
+            #             command["wait"] = walk_time
+            #             # print(f"this is commandwait f{command["wait"]} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+            #         wait_time = command["wait"]
+            #         print(f"Waiting for {wait_time} seconds...")
+            #         stop_event.clear()
+            #         was_stopped = stop_event.wait(timeout=wait_time)
+            #         if was_stopped:
+            #             print("Sleep was interrupted!")
+            #         else:
+            #             print("Completed full sleep")
+            #     else:
+            #         print("No wait time specified. Proceeding without delay.")
+            # task_done_event.wait()
+            # task_done_event.clear()
         else:
             # Handle single command
             ws.send(json.dumps(payload))
@@ -216,7 +229,6 @@ def record_and_process():
     if responseString:
         for oneResponse in responseString:
             payload = payloads_dict.get(oneResponse)
-            
             if payload:
                 print(f"Adding to queue: {payload}")
                 command_queue.put(payload)  # Add command(s) to queue
