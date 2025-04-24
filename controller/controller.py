@@ -181,14 +181,6 @@ def record():
 
     return processed_audio_buffer
 
-# def stop_everything():
-#     ws.send(json.dumps(payloads_dict.get("stop-face-detect")))
-#     ws.send(json.dumps(payloads_dict.get("stop-visual-patrol")))
-#     ws.send(json.dumps(payloads_dict.get("stop-visual-patrol")))
-#     ws.send(json.dumps(payloads_dict.get("stop-color-detect")))
-#     # print(f"this is stop color detect function              {payloads_dict.get("stop-color-detect")}")
-#     print("stopping everything !!!!!!!!!!!!!!!!!!!!!!!!!!!")
-
 def record_and_process():
     print("Wake word detected!")
     
