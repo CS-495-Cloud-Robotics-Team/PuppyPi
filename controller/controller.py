@@ -85,7 +85,7 @@ def websocket_handler():
                 print(command)
                 #check if its a "wait" type command or websocket command
                 if "wait_time" in command:
-                    print(f"waiting for time f{command["wait_time"]}")
+                    # print(f"waiting for time {command["wait_time"]}")
                     stop_event.clear()
                     was_stopped = stop_event.wait(timeout=command["wait_time"]) #this is for possible interupt when wakeword is said again
                 elif "variable_time" in command:
