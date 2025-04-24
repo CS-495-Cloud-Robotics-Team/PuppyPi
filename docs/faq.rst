@@ -153,3 +153,8 @@ To update API keys:
    .. code-block:: zsh
 
       sudo reboot raspberrypi
+
+
+Changing the Battery
+--------------------
+We put a piece of tape on the bottom instead of screws for ease of changing.
