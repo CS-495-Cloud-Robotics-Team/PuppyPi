@@ -30,49 +30,54 @@ Installation Steps
    SSH into your PuppyPi. If using VNC Viewer, ensure the PuppyPi is powered on and on the same network.
 
 2. **Setup**
-  Navigate to HiWonder-toolbox, open wifi_conf.py, change WIFI_MODE to 2, change WIFI_STA_SSID to the name of the network (if in Dr. Chris Crawford's lab, this would be HTIL Router), change wifi_sta_password to the network password, then save the file.
+    Navigate to HiWonder-toolbox, open wifi_conf.py, change WIFI_MODE to 2, change WIFI_STA_SSID to the         name of the network (if in Dr. Chris Crawford's lab, this would be HTIL Router), change wifi_sta_password to the network password, then save the file.
+
   
   Type in terminal
   
   .. code-block:: zsh
 
-  sudo systemctl restart wifi.service
-  cd /home/pi/
-  git init
-  git remote add origin https://github.com/CS-495-Cloud-Robotics-Team/PuppyPi
-  git fetch origin main
-  git reset --hard origin/main
-  nano .env
+    sudo systemctl restart wifi.service
+    cd /home/pi/
+    git init
+    git remote add origin https://github.com/CS-495-Cloud-Robotics-Team/PuppyPi
+    git fetch origin main
+    git reset --hard origin/main
+    nano .env
 
-Edit in the .env file: 
-
-PICO_ACCESS_KEY = enter Picovoice access key here
-AWS_API_KEY = enter AWS api key here
-WIFI_STA_SSID = enter network name here
-WIFI_STA_USERNAME = enter username here, if Enterprise
-WIFI_STA_PASSWORD = enter network password here
-
-cd /home/puppypi/
-sudo cp git_sync.service/etc/systemd/system/
-sudo systemctl enable git_sync.service
+  Edit in the .env file: 
+  
+  PICO_ACCESS_KEY = enter Picovoice access key here
+  AWS_API_KEY = enter AWS api key here
+  WIFI_STA_SSID = enter network name here
+  WIFI_STA_USERNAME = enter username here, if Enterprise
+  WIFI_STA_PASSWORD = enter network password here
 
   .. code-block:: zsh
 
-  cd /home/pi/controller/
-chmod +x setup_dependencies.zsh
-./setup_dependencies.zsh
+    cd /home/puppypi/
+    sudo cp git_sync.service/etc/systemd/system/
+    sudo systemctl enable git_sync.service
 
-run in terminal:
-python3 controller.py
+  .. code-block:: zsh
+
+    cd /home/pi/controller/
+    chmod +x setup_dependencies.zsh
+    ./setup_dependencies.zsh
+
+  Run in terminal:
+  .. code-block:: zsh
+    python3 controller.py
    
-this will run the controller program so everything should work.
-
-in order to make the controller script run on startup:
-cd /home/pi/controller/
-sudo cp controller_startup.service
-/etc/systemd/system/
-sudo systemctl enable controller_startup.service
-sudo reboot raspberrypi
+  This will run the controller program so everything should work.
+  
+  In order to make the controller script run on startup:
+  .. code-block:: zsh
+    cd /home/pi/controller/
+    sudo cp controller_startup.service
+    /etc/systemd/system/
+    sudo systemctl enable controller_startup.service
+    sudo reboot raspberrypi
 
 3. **Provide Credentials When Prompted**
 
