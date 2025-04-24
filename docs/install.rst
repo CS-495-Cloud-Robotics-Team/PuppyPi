@@ -68,10 +68,10 @@ python3 controller.py
 this will run the controller program so everything should work.
 
 in order to make the controller script run on startup:
-cd /home/pi/puppypi/
-sudo cp start_node.service
+cd /home/pi/controller/
+sudo cp controller_startup.service
 /etc/systemd/system/
-sudo systemctl enable start_node.service
+sudo systemctl enable controller_startup.service
 sudo reboot raspberrypi
 
 3. **Provide Credentials When Prompted**
