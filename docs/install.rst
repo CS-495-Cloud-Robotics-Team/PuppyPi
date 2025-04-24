@@ -30,7 +30,7 @@ Installation Steps
    SSH into your PuppyPi. If using VNC Viewer, ensure the PuppyPi is powered on and on the same network.
 
 2. **Setup**
-    Navigate to HiWonder-toolbox, open wifi_conf.py, change WIFI_MODE to 2, change WIFI_STA_SSID to the         name of the network (if in Dr. Chris Crawford's lab, this would be HTIL Router), change wifi_sta_password to the network password, then save the file.
+  Navigate to HiWonder-toolbox, open wifi_conf.py, change WIFI_MODE to 2, change WIFI_STA_SSID to the         name of the network (if in Dr. Chris Crawford's lab, this would be HTIL Router), change wifi_sta_password to the network password, then save the file.
 
   
   Type in terminal
@@ -47,11 +47,11 @@ Installation Steps
 
   Edit in the .env file: 
   
-  PICO_ACCESS_KEY = enter Picovoice access key here
-  AWS_API_KEY = enter AWS api key here
-  WIFI_STA_SSID = enter network name here
-  WIFI_STA_USERNAME = enter username here, if Enterprise
-  WIFI_STA_PASSWORD = enter network password here
+  - PICO_ACCESS_KEY = enter Picovoice access key here
+  - AWS_API_KEY = enter AWS api key here
+  - WIFI_STA_SSID = enter network name here
+  - WIFI_STA_USERNAME = enter username here, if Enterprise
+  - WIFI_STA_PASSWORD = enter network password here
 
   .. code-block:: zsh
 
@@ -66,12 +66,14 @@ Installation Steps
     ./setup_dependencies.zsh
 
   Run in terminal:
+
   .. code-block:: zsh
     python3 controller.py
    
   This will run the controller program so everything should work.
   
   In order to make the controller script run on startup:
+
   .. code-block:: zsh
     cd /home/pi/controller/
     sudo cp controller_startup.service
