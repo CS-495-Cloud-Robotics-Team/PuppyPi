@@ -13,6 +13,8 @@ To begin development, SSH into the PuppyPi and navigate to the working directory
    ssh pi@<puppypi-ip-address>
    cd /home/pi
 
+You can SSH through VSCode or VNC Viewer for ease of coding.
+
 The project’s major components are structured as follows:
 
 - **Wi-Fi Configuration**
