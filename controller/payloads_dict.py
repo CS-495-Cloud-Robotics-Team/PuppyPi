@@ -162,7 +162,7 @@ payloads_dict = {
         }
         },
         {
-            "wait": 0.2
+            "wait_time": 0.2
         },
         {
         "op": "publish",
@@ -173,7 +173,7 @@ payloads_dict = {
             }
         },
         {
-            "wait": 2.5
+            "variable_wait": 2.5
         },
         {
         "op": "publish",
@@ -281,7 +281,7 @@ payloads_dict = {
         }
         },
         {
-            "wait": 0.2
+            "wait_time": 0.2
         },
         {
         "op": "publish",
@@ -292,7 +292,7 @@ payloads_dict = {
             }
         },
         {
-            "wait": 4.06
+            "wait_time": 4.06
         },
         {
         "op": "publish",
@@ -320,7 +320,7 @@ payloads_dict = {
         }
         },
         {
-            "wait": 0.2
+            "wait_time": 0.2
         },
         {
         "op": "publish",
@@ -331,7 +331,7 @@ payloads_dict = {
             }
         },
         {
-            "wait": 2.03
+            "wait_time": 2.03
         },
         {
         "op": "publish",
@@ -359,7 +359,7 @@ payloads_dict = {
         }
         },
         {
-            "wait": 0.2
+            "wait_time": 0.2
         },
         {
         "op": "publish",
@@ -370,7 +370,7 @@ payloads_dict = {
             }
         },
         {
-            "wait": 2.03
+            "wait_time": 2.03
         },
         {
         "op": "publish",
@@ -438,7 +438,7 @@ payloads_dict = {
         }
         },
         {
-            "wait": 0.2
+            "wait_time": 0.2
         },
         {
         "op": "publish",
@@ -449,7 +449,7 @@ payloads_dict = {
             }
         },
         {
-            "wait": "{{walk_time}}"
+            "variable_wait": 2.5
         },
         {
         "op": "publish",
@@ -477,7 +477,7 @@ payloads_dict = {
         }
         },
         {
-            "wait": 0.2
+            "wait_time": 0.2
         },
         {
         "op": "publish",
@@ -488,7 +488,7 @@ payloads_dict = {
             }
         },
         {
-            "wait": "{{walk_time}}"
+            "variable_wait": 2.5
         },
         {
         "op": "publish",
@@ -539,7 +539,7 @@ payloads_dict = {
             }
         },
         {
-            "wait": 10.0
+            "wait_time": 10.0
         },
         {
             "op": "call_service",
@@ -573,7 +573,7 @@ payloads_dict = {
             }
         },
         {
-            "wait": 10.0
+            "wait_time": 10.0
         },
         {
             "op": "call_service",
@@ -607,7 +607,7 @@ payloads_dict = {
         }
       },
               {
-            "wait": 10.0
+            "wait_time": 10.0
         },
         {
             "op": "call_service",
@@ -634,7 +634,7 @@ payloads_dict = {
         }
       },
         {
-            "wait": 10.0
+            "wait_time": 10.0
         },
         {
             "op": "call_service",
@@ -661,7 +661,7 @@ payloads_dict = {
         }
       },
         {
-            "wait": 10.0
+            "wait_time": 10.0
         },
         {
             "op": "call_service",
@@ -688,7 +688,7 @@ payloads_dict = {
         }
       },
         {
-            "wait": 10.0
+            "wait_time": 10.0
         },
         {
             "op": "call_service",
@@ -711,7 +711,7 @@ payloads_dict = {
         }
       },
               {
-            "wait": 10.0
+            "wait_time": 10.0
         },
         {
             "op": "call_service",
@@ -734,7 +734,7 @@ payloads_dict = {
         }
       },
               {
-            "wait": 10.0
+            "wait_time": 10.0
         },
         {
             "op": "call_service",
