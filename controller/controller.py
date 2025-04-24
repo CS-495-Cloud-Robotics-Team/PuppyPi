@@ -80,7 +80,7 @@ def websocket_handler():
     while True:
         payload = command_queue.get()  # Wait for a command
         if isinstance(payload, list):  # Check if it's a list of commands
-            # each command is either a "wait" (wait_time, variable_time, etc.) or a full websocket command
+            # each command is either a "wait" (wait_time, variable_wait, etc.) or a full websocket command
             for command in payload:
                 print(command)
                 #check if its a "wait" type command or websocket command
@@ -88,18 +88,27 @@ def websocket_handler():
                     # print(f"waiting for time {command["wait_time"]}")
                     stop_event.clear()
                     was_stopped = stop_event.wait(timeout=command["wait_time"]) #this is for possible interupt when wakeword is said again
-                elif "variable_time" in command:
-                    # print(f"waiting for time f{command["variable_time"]}")
-                    variable_time = command["variable_time"]
+                    print(f"Wating for " ,command["wait_time"])
+                elif "variable_wait" in command:
+                    print("in variable time clauseS")
+                    # print(f"waiting for time f{command["variable_wait"]}")
+                    variable_wait = command["variable_wait"]
                     d = command_queue #creates a seperate version for queue to peek next variable (I don't actually know how queues work lol so change if needed)
-                    if not d.empty() and (isinstance(d.queue[0], float) or isinstance(d.queue[0], int)): #if next is integer i.e. for walk pop it and change variable_time
-                        variable_time = command_queue.get()
+                    print(d)
+                    if not d.empty() and (isinstance(d.queue[0], float) or isinstance(d.queue[0], int)): #if next is integer i.e. for walk pop it and change variable_wait
+                        print("in something")
+                        variable_wait = command_queue.get()
                     stop_event.clear()
-                    was_stopped = stop_event.wait(timeout=variable_time)
+                    was_stopped = stop_event.wait(timeout=variable_wait)
+                    print(f"Wating for " ,variable_wait)
                 else: #websocket command, execute it then wait for message recieved to continue
+                    print(f"Sending payload: {command}")
                     ws.send(json.dumps(command))
-                    task_done_event.wait()
+                    print("just sent payload, waiting for response...")
+                    # task_done_event.wait()
+                    print("Task event done waiting...")
                     task_done_event.clear()
+                    print("Task event cleared...")
         else:
             # Handle single command
             ws.send(json.dumps(payload))
