@@ -252,9 +252,7 @@ Future Features
    These are planned features under consideration for future development
 
 - Advanced gesture recognition
-- Autonomous navigation capabilities
 - Multi-robot coordination system
-- Enhanced security features for cloud connectivity
 - Utilizing the arm that comes with the PuppyPi to pick up and grab objects
 - More advanced computer vision techniques, allowing PuppyPi to dynamically interact with its environment
 - Ability to run python programs on PuppyPi through the websocket instead of individual ROS commands one by one
