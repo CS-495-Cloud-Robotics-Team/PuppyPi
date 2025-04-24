@@ -67,19 +67,21 @@ Installation Steps
 
   Run in terminal:
 
-  .. code-block:: zsh
-    python3 controller.py
+    .. code-block:: zsh
+
+      python3 controller.py
    
   This will run the controller program so everything should work.
   
   In order to make the controller script run on startup:
 
-  .. code-block:: zsh
-    cd /home/pi/controller/
-    sudo cp controller_startup.service
-    /etc/systemd/system/
-    sudo systemctl enable controller_startup.service
-    sudo reboot raspberrypi
+    .. code-block:: zsh
+
+      cd /home/pi/controller/
+      sudo cp controller_startup.service
+      /etc/systemd/system/
+      sudo systemctl enable controller_startup.service
+      sudo reboot raspberrypi
 
 3. **Provide Credentials When Prompted**
 
