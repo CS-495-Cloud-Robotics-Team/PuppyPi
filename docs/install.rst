@@ -29,21 +29,50 @@ Installation Steps
 
    SSH into your PuppyPi. If using VNC Viewer, ensure the PuppyPi is powered on and on the same network.
 
-2. **Import and Run Setup Script**
+2. **Setup**
+  Navigate to HiWonder-toolbox, open wifi_conf.py, change WIFI_MODE to 2, change WIFI_STA_SSID to the name of the network (if in Dr. Chris Crawford's lab, this would be HTIL Router), change wifi_sta_password to the network password, then save the file.
+  
+  Type in terminal
+  
+  .. code-block:: zsh
 
-   Download the setup script from our GitHub repository:
+  sudo systemctl restart wifi.service
+  cd /home/pi/
+  git init
+  git remote add origin https://github.com/CS-495-Cloud-Robotics-Team/PuppyPi
+  git fetch origin main
+  git reset --hard origin/main
+  nano .env
 
-   - Repository: https://github.com/CS-495-Cloud-Robotics-Team/PuppyPi
+Edit in the .env file: 
 
-   Copy the `setup_cloud_puppypi.sh` script into the `/home/pi` directory on the PuppyPi.
+PICO_ACCESS_KEY = enter Picovoice access key here
+AWS_API_KEY = enter AWS api key here
+WIFI_STA_SSID = enter network name here
+WIFI_STA_USERNAME = enter username here, if Enterprise
+WIFI_STA_PASSWORD = enter network password here
 
-   Then, open a terminal and run:
+cd /home/puppypi/
+sudo cp git_sync.service/etc/systemd/system/
+sudo systemctl enable git_sync.service
 
-   .. code-block:: zsh
+  .. code-block:: zsh
 
-      cd /home/pi
-      chmod +x setup_cloud_puppypi.sh
-      ./setup_cloud_puppypi.sh
+  cd /home/pi/controller/
+chmod +x setup_dependencies.zsh
+./setup_dependencies.zsh
+
+run in terminal:
+python3 controller.py
+   
+this will run the controller program so everything should work.
+
+in order to make the controller script run on startup:
+cd /home/pi/puppypi/
+sudo cp start_node.service
+/etc/systemd/system/
+sudo systemctl enable start_node.service
+sudo reboot raspberrypi
 
 3. **Provide Credentials When Prompted**
 
